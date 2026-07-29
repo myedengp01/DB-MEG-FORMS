@@ -48,8 +48,7 @@
 
   .screen{display:none;min-height:100vh;padding:90px 24px 60px;}
   .screen.active{display:block;}
-
-  #screen-login{display:flex;align-items:center;justify-content:center;}
+  .screen.active.center{display:flex;align-items:center;justify-content:center;}
   .login-wrap{width:420px;max-width:92vw;text-align:center;}
   .logo-orb-wrap{width:104px;height:104px;margin:0 auto 20px;position:relative;}
   .logo-orb-wrap::before{
@@ -84,6 +83,9 @@
   .dash-header{display:flex;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto 8px;}
   .dash-title{font-size:26px;font-weight:700;letter-spacing:-.01em;}
   .dash-sub{font-size:13px;color:var(--text-2);margin-top:4px;}
+  .welcome-block{max-width:1080px;margin:0 auto 28px;}
+  .welcome-title{font-size:18px;font-weight:700;margin-bottom:4px;}
+  .welcome-sub{font-size:13px;color:var(--text-2);}
   .user-chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 16px 6px 6px;}
   .user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent-purple),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
   .user-name{font-size:13px;font-weight:600;}
@@ -99,6 +101,14 @@
   .card-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:999px;background:var(--badge-bg,rgba(79,216,196,0.15));color:var(--badge-color,var(--accent));}
   .card-arrow{position:absolute;bottom:20px;right:20px;font-size:18px;color:var(--text-3);transition:.25s;}
   .form-card:hover .card-arrow{color:var(--accent);transform:translateX(3px);}
+  .card-preview-pop{
+    display:none;position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);
+    width:280px;background:var(--card);border:1px solid var(--border-strong);border-radius:10px;
+    box-shadow:0 12px 32px rgba(0,0,0,0.35);overflow:hidden;z-index:20;pointer-events:none;
+  }
+  .form-card:hover .card-preview-pop{display:block;}
+  .card-preview-pop img{width:100%;display:block;border-bottom:1px solid var(--border);}
+  .card-preview-caption{padding:8px 10px;font-size:11px;color:var(--text-2);}
 
   .empty-state{max-width:1080px;margin:80px auto 0;text-align:center;padding:60px 20px;background:var(--card);border:1px dashed var(--border-strong);border-radius:20px;}
   .empty-icon{font-size:44px;margin-bottom:16px;opacity:.7;}
@@ -116,7 +126,7 @@
 </div>
 
 <!-- ============ LOGIN ============ -->
-<div class="screen active" id="screen-login">
+<div class="screen active center" id="screen-login">
   <div class="login-wrap">
     <div class="logo-orb-wrap"><div class="logo-orb"><img id="logoImg" src="" alt="MyEden Group logo"></div></div>
     <div class="login-title">MEG-FORMS</div>
@@ -151,7 +161,7 @@
     </div>
 
     <div class="login-foot" id="loginFoot">No account yet? <a onclick="showAuthBox('signup')">Sign up</a></div>
-    <div class="version-stamp">DB-MEG-FORMS v2026.07.29-17:30</div>
+    <div class="version-stamp">DB-MEG-FORMS v2026.07.29-18:00</div>
   </div>
 </div>
 
@@ -168,10 +178,16 @@
       <button class="signout-btn" onclick="doSignOut()">Sign out</button>
     </div>
   </div>
+
+  <div class="welcome-block">
+    <div class="welcome-title">Welcome to MyEden Group's Unified Forms Portal</div>
+    <div class="welcome-sub">Please select your form to begin with...</div>
+  </div>
+
   <div id="dashContent">
     <div class="loading-note">Loading your forms...</div>
   </div>
-  <div class="footer-note">Ref: DB-MEG-FORMS v2026.07.29-17:30</div>
+  <div class="footer-note">Ref: DB-MEG-FORMS v2026.07.29-18:00</div>
 </div>
 
 <script>
@@ -314,8 +330,15 @@ async function loadDashboard(){
     const badgeText = perm.is_admin ? 'ADMIN ACCESS' : 'SUBMIT ACCESS';
     const badgeIcon = perm.is_admin ? '🔑' : '✓';
     const accent = f.accent_color || '#4fd8c4';
+    const previewHtml = f.preview_image
+      ? `<div class="card-preview-pop">
+           <img src="${f.preview_image}" alt="${escapeHtml(f.display_name)} preview">
+           <div class="card-preview-caption">${escapeHtml(f.description || '')}</div>
+         </div>`
+      : '';
     return `
-      <a class="form-card" href="${f.url}" style="--card-accent:${accent};--card-icon-bg:${accent}26;--badge-bg:${accent}26;--badge-color:${accent};">
+      <a class="form-card" href="${f.url}" target="_blank" rel="noopener" style="--card-accent:${accent};--card-icon-bg:${accent}26;--badge-bg:${accent}26;--badge-color:${accent};">
+        ${previewHtml}
         <div class="card-icon">${f.icon || '📄'}</div>
         <div class="card-name">${escapeHtml(f.display_name)}</div>
         <div class="card-desc">${escapeHtml(f.description || '')}</div>
