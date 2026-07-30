@@ -175,6 +175,7 @@
     <div class="user-chip">
       <div class="user-avatar" id="userAvatar">--</div>
       <div class="user-name" id="userName">--</div>
+      <button class="signout-btn" id="adminLinkBtn" style="display:none;" onclick="window.location.href='admin.html'">⚙️ Admin</button>
       <button class="signout-btn" onclick="doSignOut()">Sign out</button>
     </div>
   </div>
@@ -267,6 +268,7 @@ async function doSignOut(){
   await sb.auth.signOut();
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPassword').value = '';
+  document.getElementById('adminLinkBtn').style.display = 'none';
   document.getElementById('screen-dashboard').classList.remove('active');
   document.getElementById('screen-login').classList.add('active');
   showAuthBox('login');
@@ -294,6 +296,9 @@ async function loadDashboard(){
   const permMap = {};
   (perms||[]).forEach(p=>{ permMap[p.form_code] = p; });
   const formCodes = Object.keys(permMap);
+
+  const isAdminOnAnyForm = (perms||[]).some(p=>p.is_admin);
+  document.getElementById('adminLinkBtn').style.display = isAdminOnAnyForm ? 'inline-flex' : 'none';
 
   const content = document.getElementById('dashContent');
   const sub = document.getElementById('dashSub');
