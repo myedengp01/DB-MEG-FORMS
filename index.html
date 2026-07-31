@@ -4,7 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MEG-FORMS Dashboard</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MEG-FORMS">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('service-worker.js').catch(function(err){
+      console.warn('Service worker registration failed (non-fatal):', err);
+    });
+  });
+}
+</script>
 <style>
   :root{
     --bg-0:#0a0e1a; --bg-1:#0f1526; --card:#151d35; --card-hover:#1b2440;
@@ -161,7 +177,7 @@
     </div>
 
     <div class="login-foot" id="loginFoot">No account yet? <a onclick="showAuthBox('signup')">Sign up</a></div>
-    <div class="version-stamp">DB-MEG-FORMS v2026.07.30-18:00</div>
+    <div class="version-stamp">DB-MEG-FORMS v2026.07.31-09:30</div>
   </div>
 </div>
 
@@ -188,7 +204,7 @@
   <div id="dashContent">
     <div class="loading-note">Loading your forms...</div>
   </div>
-  <div class="footer-note">Ref: DB-MEG-FORMS v2026.07.30-18:00</div>
+  <div class="footer-note">Ref: DB-MEG-FORMS v2026.07.31-09:30</div>
 </div>
 
 <script>
