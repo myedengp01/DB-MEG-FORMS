@@ -1,250 +1,1476 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEG-FORMS Dashboard</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-<meta name="theme-color" content="#0a0e1a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="MEG-FORMS">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <!-- Verified package: MEG-TEC-V2 v2026.08.10-10:00 -->
+  <meta name="description" content="MYEDEN monthly tuition and enrichment class payment form" />
+  <title>MEG-TEC-V2 v2026.08.10-10:00</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#124b82">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <style id="printPageStyle">@page { size: A4 portrait; margin: 6mm; }</style>
+  <style>
+    :root {
+      --navy-950: #06182d;
+      --navy-900: #082544;
+      --navy-800: #0b315b;
+      --navy-700: #124b82;
+      --blue-100: #e8f2fb;
+      --blue-50: #f4f8fc;
+      --ink: #10233a;
+      --muted: #60728a;
+      --line: #26384d;
+      --paper: #ffffff;
+      --app-bg: #dfe9f4;
+      --danger: #b42318;
+      --success: #067647;
+      --weekend: #ffe2e2;
+      --weekend-border: #e89999;
+      --radius: 14px;
+      --shadow: 0 18px 46px rgba(6, 24, 45, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--navy-950); }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, var(--navy-950) 0, var(--navy-900) 230px, var(--app-bg) 230px, #eef4fa 100%);
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+
+    .app-shell {
+      width: min(1760px, calc(100% - 28px));
+      margin: 20px auto 56px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 14px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(8, 37, 68, 0.96);
+      color: white;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 8px;
+      z-index: 20;
+    }
+
+    .toolbar__title {
+      margin-right: auto;
+      min-width: 250px;
+    }
+
+    .toolbar__title strong {
+      display: block;
+      font-size: 1rem;
+    }
+
+    .toolbar__title span {
+      display: block;
+      margin-top: 2px;
+      color: #c6d8e9;
+      font-size: 0.79rem;
+    }
+
+    .toolbar__field {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: .79rem;
+      font-weight: 800;
+    }
+
+    .toolbar__field select {
+      border: 1px solid #9db2c8;
+      border-radius: 7px;
+      background: white;
+      color: var(--navy-950);
+      padding: 6px 8px;
+      font-weight: 800;
+    }
+
+    .toolbar__field input[type="number"] {
+      border: 1px solid #9db2c8;
+      border-radius: 7px;
+      background: white;
+      color: var(--navy-950);
+      padding: 6px 8px;
+      font-weight: 800;
+    }
+
+    #pagesContainer { display: flex; flex-direction: column; gap: 18px; }
+
+    .tec-page-wrap {
+      border: 1px solid #b9c9d9;
+      border-radius: 17px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .tec-page-tab {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: var(--navy-700);
+      color: #fff;
+      font-weight: 900;
+      font-size: .85rem;
+    }
+    .tec-page-tab .tec-page-course-badge {
+      font-weight: 700;
+      opacity: .85;
+      margin-left: 8px;
+    }
+    .tec-page-remove {
+      background: rgba(255,255,255,.15);
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+    .tec-page-remove:hover { background: rgba(255,255,255,.3); }
+    .tec-page-remove:disabled { opacity: .3; cursor: not-allowed; }
+
+    .tec-page-frame {
+      width: 100%;
+      border: none;
+      display: block;
+      min-height: 900px;
+    }
+
+    .version-footer {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--muted);
+      padding: 14px 0 30px;
+    }
+
+    .grouping-prompt-overlay {
+      position: fixed; inset: 0; background: rgba(6,24,45,.55);
+      display: none; align-items: center; justify-content: center; z-index: 60;
+    }
+    .grouping-prompt-box {
+      background: #fff; border-radius: 14px; padding: 24px 26px;
+      max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,.3);
+    }
+    .grouping-prompt-box h3 { margin: 0 0 10px; color: var(--navy-900); }
+    .grouping-prompt-box p { margin: 0 0 18px; color: var(--muted); font-size: .9rem; }
+    .grouping-prompt-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .grouping-prompt-actions button {
+      padding: 9px 18px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer;
+    }
+    .grouping-prompt-actions .btn-yes { background: var(--navy-700); color: #fff; }
+    .grouping-prompt-actions .btn-no { background: #e3e9ef; color: var(--navy-900); }
+
+    .btn {
+      border: 1px solid #aec0d2;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--navy-950);
+      padding: 8px 11px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.15s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: white; }
+    .btn:focus-visible { outline: 3px solid rgba(130, 196, 255, .45); outline-offset: 2px; }
+    .btn--primary { background: #4aa3e6; color: #06182d; border-color: #74baf0; }
+    .btn--primary:hover { background: #75bdf2; }
+    .btn--danger { color: var(--danger); }
+    .btn--small { padding: 5px 8px; font-size: .78rem; }
+
+    .status {
+      width: 100%;
+      min-height: 1.1em;
+      margin-top: 1px;
+      color: #9ff0c9;
+      font-size: .8rem;
+      font-weight: 800;
+    }
+
+    .paper {
+      background: var(--paper);
+      border-radius: 17px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid #b9c9d9;
+    }
+
+    .document-header {
+      position: relative;
+      margin: 22px 22px 0;
+      background: linear-gradient(135deg, var(--navy-950), var(--navy-800));
+      color: white;
+      padding: 18px 20px 17px;
+      border-radius: 7px 7px 0 0;
+    }
+
+    .header-logo-badge {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      width: 46px;
+      height: 46px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    }
+    .header-logo-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    @media (max-width: 520px) {
+      .header-logo-badge { width: 36px; height: 36px; top: 10px; left: 10px; }
+    }
+
+    .document-title {
+      text-align: center;
+      font-weight: 950;
+      font-size: clamp(1.15rem, 2.05vw, 2rem);
+      line-height: 1.12;
+      letter-spacing: .012em;
+      text-transform: uppercase;
+    }
+
+    .year-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .document-header input,
+    .document-header select {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid #c8d4e0;
+      background: white;
+      color: #071a30;
+      border-radius: 4px;
+      padding: 6px 9px;
+      font-weight: 800;
+    }
+
+    .year-input {
+      flex: 0 0 126px;
+      width: 126px !important;
+      min-width: 126px !important;
+      text-align: center;
+      font-size: 1.05em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #serialNo {
+      background: #eaf3fb;
+      color: var(--navy-950);
+      letter-spacing: .035em;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(330px, .95fr);
+      gap: 9px 22px;
+      margin-top: 17px;
+    }
+
+    .meta-column { display: grid; gap: 8px; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 155px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .field-row label {
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .time-fields {
+      display: grid;
+      grid-template-columns: auto minmax(110px, 1fr) auto minmax(110px, 1fr);
+      align-items: center;
+      gap: 7px;
+      color: white;
+    }
+
+    .schedule-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 18px;
+      margin: 0 22px;
+      padding: 10px 13px;
+      color: var(--navy-950);
+      background: var(--blue-100);
+      border: 2px solid var(--navy-800);
+      border-top: 0;
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .same-date-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .same-date-control input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--navy-700);
+    }
+
+    .weekend-key {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #6f2525;
+    }
+
+    .weekend-swatch {
+      width: 18px;
+      height: 14px;
+      border: 1px solid var(--weekend-border);
+      background: var(--weekend);
+      border-radius: 3px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0 22px;
+      border-left: 2px solid var(--line);
+      border-right: 2px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1540px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border-right: 1.25px solid var(--line);
+      border-bottom: 1.25px solid var(--line);
+      padding: 0;
+      vertical-align: middle;
+    }
+
+    th:last-child, td:last-child { border-right: 0; }
+
+    thead th {
+      background: var(--navy-950);
+      color: white;
+      padding: 9px 4px;
+      font-size: .82rem;
+      line-height: 1.1;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    thead .month-header {
+      background: #f8fbfe;
+      color: var(--navy-950);
+      border-top: 2px solid var(--navy-950);
+      padding: 5px;
+    }
+
+    .month-header select {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      font-weight: 950;
+      text-transform: uppercase;
+      outline: none;
+      color: var(--navy-950);
+    }
+
+    .slot-header { background: var(--navy-800); }
+
+    .col-no { width: 48px; }
+    .col-name { width: 300px; }
+    .col-kind { width: 132px; }
+    .col-day { width: 49px; }
+    .col-money { width: 105px; }
+    .col-action { width: 58px; }
+
+    tbody td { background: #fff; }
+    tbody tr:nth-child(4n+3) td,
+    tbody tr:nth-child(4n+4) td { background: #f7fafd; }
+
+    .cell-input,
+    .day-select {
+      width: 100%;
+      min-height: 35px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      padding: 5px 7px;
+      color: #081b31;
+      outline: none;
+    }
+
+    .cell-input:focus,
+    .day-select:focus {
+      box-shadow: inset 0 0 0 2px #2b85c7;
+      background: #ecf7ff;
+    }
+
+    .student-name {
+      font-weight: 800;
+      text-transform: uppercase;
+      padding-left: 10px;
+    }
+
+    .number-cell { text-align: center; font-weight: 900; }
+    .day-kind { text-align: center; font-weight: 800; font-size: .8rem; padding: 4px; }
+    .day-select { text-align: center; text-align-last: center; padding: 3px 1px; cursor: pointer; }
+    .money-input { text-align: right; font-variant-numeric: tabular-nums; padding-right: 9px; }
+    .action-cell { text-align: center; }
+
+    td.weekend {
+      background: var(--weekend) !important;
+      box-shadow: inset 0 0 0 1px var(--weekend-border);
+    }
+
+    td.weekend .day-select { color: #8a1f1f; font-weight: 900; }
+
+    tfoot td {
+      background: var(--navy-950);
+      color: white;
+      font-weight: 900;
+      padding: 9px 8px;
+    }
+
+    .total-label {
+      text-align: center;
+      font-size: 1.35rem;
+      letter-spacing: .02em;
+    }
+
+    .total-number { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .document-footer { padding: 10px 22px 26px; }
+
+    .note {
+      margin: 0;
+      font-size: .78rem;
+      font-style: italic;
+      font-weight: 800;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-top: 28px;
+      color: var(--navy-950);
+      font-size: .76rem;
+    }
+
+    .footer-meta {
+      display: grid;
+      gap: 4px;
+    }
+
+    .generated-stamp {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .add-student-table-row td {
+      padding: 10px;
+      text-align: center;
+      background: #edf4fb;
+      border-top: 1.25px solid var(--line);
+    }
+
+    .add-student-table-btn {
+      min-width: 170px;
+    }
+
+    .settings-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(150px, 1fr));
+      gap: 12px;
+      padding: 16px 22px 18px;
+      background: #edf3f8;
+      border-top: 1px solid #c5d3df;
+    }
+
+    .settings-panel label {
+      display: grid;
+      gap: 5px;
+      font-size: .79rem;
+      color: #40566f;
+      font-weight: 850;
+    }
+
+    .settings-panel input {
+      width: 100%;
+      border: 1px solid #aebfd0;
+      border-radius: 8px;
+      padding: 8px 9px;
+      background: white;
+      color: var(--navy-950);
+    }
+
+    .privacy-note {
+      margin: 14px 22px 20px;
+      padding: 11px 13px;
+      border-left: 4px solid var(--navy-700);
+      background: #edf6fd;
+      font-size: .8rem;
+      color: #334d68;
+    }
+
+    .file-input { display: none; }
+
+    @media (max-width: 980px) {
+      .meta-grid { grid-template-columns: 1fr; }
+      .settings-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .document-header, .table-wrap, .schedule-bar { margin-left: 12px; margin-right: 12px; }
+      .document-footer { padding-left: 12px; padding-right: 12px; }
+    }
+
+    @media (max-width: 600px) {
+      .app-shell { width: calc(100% - 12px); margin-top: 7px; }
+      .toolbar { top: 3px; border-radius: 10px; }
+      .toolbar__title { width: 100%; }
+      .field-row { grid-template-columns: 1fr; gap: 4px; }
+      .time-fields { grid-template-columns: auto 1fr; }
+      .settings-panel { grid-template-columns: 1fr; }
+      .document-title { font-size: 1.05rem; }
+      .year-input { flex-basis: 112px; width: 112px !important; min-width: 112px !important; }
+    }
+
+    @media print {
+      * { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+      html, body { background: white !important; }
+      .app-shell { width: 100%; margin: 0; }
+      .toolbar, .settings-panel, .privacy-note, .schedule-bar, .col-action, .action-cell, .add-student-table-body, #topUserBar, .no-print { display: none !important; }
+      tr.output-empty { display: none !important; }
+      input::placeholder { color: transparent !important; opacity: 0 !important; }
+      .paper { box-shadow: none; border: 0; border-radius: 0; overflow: visible; }
+      .document-header { margin: 0; padding: 3.2mm 4mm 2.8mm; border-radius: 0; }
+      .document-title { font-size: 13.5pt; line-height: 1.05; }
+      .header-logo-badge { width: 10mm; height: 10mm; top: 2.5mm; left: 3mm; padding: .8mm; }
+      .year-line { gap: 2mm; margin-top: 1mm; }
+      .year-input { flex-basis: 22mm; width: 22mm !important; min-width: 22mm !important; }
+      .meta-grid { gap: 1.5mm 4mm; margin-top: 2.5mm; grid-template-columns: minmax(0, 1.55fr) minmax(55mm, .95fr); }
+      .meta-column { gap: 1.2mm; }
+      .field-row { grid-template-columns: 28mm 1fr; gap: 1.5mm; }
+      .field-row label { font-size: 7.5pt; }
+      .document-header input, .document-header select { padding: .8mm 1.3mm; min-height: 4.6mm; font-size: 7.4pt; }
+      .time-fields { gap: 1mm; font-size: 7.2pt; grid-template-columns: auto 1fr auto 1fr; }
+      .table-wrap { margin: 0; overflow: visible; border-width: .35mm; }
+      table { width: 100%; min-width: 0; font-size: 6.6pt; table-layout: fixed; }
+      thead { display: table-header-group; }
+      tfoot { display: table-row-group; }
+      tr { break-inside: avoid; page-break-inside: avoid; }
+      th, td { border-width: .25mm; }
+      thead th { padding: 1.1mm .45mm; font-size: 6.3pt; }
+      .cell-input, .day-select { min-height: 4.1mm; padding: .35mm .45mm; font-size: 6.4pt; }
+      .student-name { padding-left: 1mm; }
+      .day-kind { font-size: 6.1pt; padding: .3mm; }
+      .day-select { appearance: none; -webkit-appearance: none; }
+      .money-input { padding-right: .8mm; }
+      tfoot td { padding: 1.3mm 1mm; }
+      .total-label { font-size: 10.5pt; }
+      .document-footer { padding: 1.5mm 0 0; }
+      .note, .footer-row { font-size: 6.5pt; }
+      .footer-row { margin-top: 4mm; }
+
+      body.print-portrait .col-no { width: 6mm; }
+      body.print-portrait .col-name { width: 39mm; }
+      body.print-portrait .col-kind { width: 18mm; }
+      body.print-portrait .col-day { width: 4.8mm; }
+      body.print-portrait .col-money { width: 19mm; }
+
+      body.print-landscape .document-title { font-size: 15pt; }
+      body.print-landscape .meta-grid { grid-template-columns: minmax(0, 1.6fr) minmax(70mm, .85fr); }
+      body.print-landscape table { font-size: 7.2pt; }
+      body.print-landscape thead th { font-size: 7pt; }
+      body.print-landscape .cell-input,
+      body.print-landscape .day-select { font-size: 7pt; min-height: 4.5mm; }
+      body.print-landscape .col-no { width: 7mm; }
+      body.print-landscape .col-name { width: 54mm; }
+      body.print-landscape .col-kind { width: 23mm; }
+      body.print-landscape .col-day { width: 8mm; }
+      body.print-landscape .col-money { width: 24mm; }
+    }
+
+    /* ===================== Auth / platform chrome ===================== */
+    .standard-checkbox-group{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;}
+    .standard-checkbox-group label{display:flex;align-items:center;gap:3px;font-size:12.5px;font-weight:normal;cursor:pointer;}
+    .standard-checkbox-group input{width:auto;margin:0;}
+    #authOverlay{
+      position:fixed;inset:0;background:#eef1f5;z-index:2000;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .auth-box{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.15);padding:32px;width:360px;max-width:90vw;}
+    .auth-box h2{margin:0 0 4px;color:var(--navy-800);font-size:20px;}
+    .auth-box .auth-sub{color:var(--muted);font-size:12.5px;margin-bottom:18px;}
+    .auth-box input{width:100%;padding:9px 10px;margin-bottom:10px;border:1px solid var(--line);border-radius:6px;font-size:13.5px;box-sizing:border-box;}
+    .auth-box button.auth-submit{width:100%;padding:10px;border:none;border-radius:6px;background:var(--navy-800);color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-top:4px;}
+    .auth-toggle{text-align:center;margin-top:14px;font-size:12.5px;color:var(--muted);}
+    .auth-toggle a{color:var(--navy-800);cursor:pointer;font-weight:600;text-decoration:none;}
+    .auth-error{color:#c0392b;font-size:12px;margin-bottom:8px;min-height:16px;}
+    .pw-wrap{position:relative;}
+    .pw-wrap input{padding-right:36px !important;}
+    .pw-toggle{
+      position:absolute;right:10px;top:50%;transform:translateY(-50%);
+      cursor:pointer;font-size:15px;color:var(--muted);user-select:none;
+      background:none;border:none;padding:0;
+    }
+    .auth-forgot{text-align:right;font-size:11.5px;margin:-4px 0 10px;}
+    .auth-forgot a{color:var(--navy-800);cursor:pointer;text-decoration:none;}
+    #topUserBar{display:none;align-items:center;gap:10px;background:#eef1f5;padding:6px 14px;font-size:12px;color:var(--muted);max-width:1760px;margin:0 auto 10px;border-radius:6px;}
+    #topUserBar button{font-size:11px;padding:3px 9px;border-radius:5px;border:1px solid var(--line);background:#fff;cursor:pointer;}
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:3000;}
+    .modal-box{background:#fff;border-radius:10px;padding:20px;width:520px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+    .modal-box h3{margin:0;color:var(--navy-800);}
+    .modal-close{cursor:pointer;font-weight:700;color:#6b7280;font-size:18px;line-height:1;}
+    .manage-tab-btn{padding:6px 14px;border:1px solid var(--navy-800);border-radius:6px;background:#fff;color:var(--navy-800);font-size:12px;font-weight:600;cursor:pointer;}
+    .manage-tab-btn.active,.manage-tab-btn:hover{background:var(--navy-800);color:#fff;}
+    .manage-add-row{display:flex;gap:6px;margin-bottom:12px;}
+    .manage-add-row input{flex:1;padding:7px 9px;border:1px solid var(--line);border-radius:6px;font-size:13px;}
+    .manage-add-row button{padding:7px 14px;border-radius:6px;border:none;background:var(--navy-800);color:#fff;font-weight:600;cursor:pointer;font-size:12.5px;}
+    .manage-list-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-bottom:1px solid #eee;font-size:13px;}
+    .manage-list-item:last-child{border-bottom:none;}
+    .manage-delete-btn{border:none;background:none;color:#c0392b;cursor:pointer;font-size:16px;font-weight:700;padding:0 4px;}
+    .manage-delete-btn:hover{color:#96281b;}
+    .manage-empty{color:#888;font-size:13px;padding:10px;}
+    .pic-screen-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+    .pic-screen-header h2{margin:0;color:var(--navy-800);}
+    .pic-filters{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;background:#f4f8fc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:14px;}
+    .pic-filters label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--muted);}
+    .pic-filters select, .pic-filters input{padding:6px 8px;font-size:13px;border:1px solid var(--line);border-radius:5px;min-width:130px;}
+    .pic-filters button{padding:7px 14px;border-radius:6px;border:1px solid var(--navy-800);background:var(--navy-800);color:#fff;font-weight:600;font-size:12.5px;cursor:pointer;}
+    #btnBackToForm, #btnBackToFormFromReports, #btnRefreshReview, #btnClearReport{background:#fff;color:var(--navy-800);}
+    .pic-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#fff;}
+    .pic-row-info{font-size:13px;}
+    .pic-row-info .name{font-weight:700;color:var(--navy-800);}
+    .pic-row-info .meta{color:var(--muted);font-size:12px;}
+    .pic-row-actions{display:flex;gap:8px;}
+    .pic-row-actions button, .pic-row-actions a{
+      padding:6px 14px;border-radius:6px;border:1px solid var(--navy-800);background:#fff;color:var(--navy-800);
+      font-weight:600;font-size:12.5px;cursor:pointer;text-decoration:none;
+    }
+    .pic-row-actions .done-btn{background:#2e8b57;border-color:#2e8b57;color:#fff;}
+    .report-summary-card{display:flex;gap:24px;flex-wrap:wrap;background:#fff8e1;border:1px solid #e6d28a;border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:13px;}
+    .report-summary-card b{display:block;font-size:18px;color:var(--navy-800);}
+  </style>
+</head>
+<body class="print-portrait">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<div id="authOverlay">
+  <div class="auth-box" id="authBoxScriptError" style="display:none;text-align:center;">
+    <h2 style="color:#c0392b;">Connection Problem</h2>
+    <div class="auth-sub">
+      This page couldn't load a required script (likely blocked by your network,
+      an ad-blocker, or a connectivity issue). Please check your internet connection
+      and refresh the page. If this keeps happening, contact your admin.
+    </div>
+  </div>
+  <div class="auth-box" id="authBoxLogin">
+    <h2>MEG-FORMS Login</h2>
+    <div class="auth-sub">Sign in to access the Monthly Tuition / Enrichment Class Payment form (MEG-TEC-V2)</div>
+    <div class="auth-sub" id="loginVersionStamp" style="margin-top:-14px;font-size:10.5px;opacity:.7;"></div>
+    <div class="auth-error" id="loginError"></div>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <div class="pw-wrap">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button type="button" class="pw-toggle" onclick="togglePwVisibility('loginPassword', this)">👁</button>
+    </div>
+    <div class="auth-forgot"><a onclick="showAuthBox('forgot')">Forgot password?</a></div>
+    <button class="auth-submit" onclick="doSignIn()">Sign In</button>
+    <div class="auth-toggle">No account yet? <a onclick="showAuthBox('signup')">Sign up</a></div>
+  </div>
+  <div class="auth-box" id="authBoxSignup" style="display:none;">
+    <h2>Create Account</h2>
+    <div class="auth-sub">Sign up, then wait for admin approval to access the form</div>
+    <div class="auth-error" id="signupError"></div>
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="email" id="signupEmail" placeholder="Email">
+    <div class="pw-wrap">
+      <input type="password" id="signupPassword" placeholder="Password (min 6 characters)">
+      <button type="button" class="pw-toggle" onclick="togglePwVisibility('signupPassword', this)">👁</button>
+    </div>
+    <button class="auth-submit" onclick="doSignUp()">Sign Up</button>
+    <div class="auth-toggle">Already have an account? <a onclick="showAuthBox('login')">Sign in</a></div>
+  </div>
+  <div class="auth-box" id="authBoxPending" style="display:none;text-align:center;">
+    <h2>Pending Approval</h2>
+    <div class="auth-sub">Your account is created. An admin needs to grant you access to MEG-TEC before you can continue.</div>
+    <button class="auth-submit" onclick="doSignOut()" style="background:#6b7280;">Sign Out</button>
+  </div>
+  <div class="auth-box" id="authBoxForgot" style="display:none;">
+    <h2>Reset Password</h2>
+    <div class="auth-sub">Enter your email and we'll send you a reset link.</div>
+    <div class="auth-error" id="forgotError"></div>
+    <input type="email" id="forgotEmail" placeholder="Email">
+    <button class="auth-submit" onclick="doForgotPassword()">Send Reset Link</button>
+    <div class="auth-toggle"><a onclick="showAuthBox('login')">Back to Sign In</a></div>
+  </div>
+  <div class="auth-box" id="authBoxNewPassword" style="display:none;">
+    <h2>Set New Password</h2>
+    <div class="auth-sub">Choose a new password for your account.</div>
+    <div class="auth-error" id="newPasswordError"></div>
+    <div class="pw-wrap">
+      <input type="password" id="newPasswordInput" placeholder="New password (min 6 characters)">
+      <button type="button" class="pw-toggle" onclick="togglePwVisibility('newPasswordInput', this)">👁</button>
+    </div>
+    <button class="auth-submit" onclick="doSetNewPassword()">Set Password</button>
+  </div>
+</div>
+
+<div id="topUserBar" class="no-print">
+  <span id="topUserLabel"></span>
+  <button onclick="doSignOut()">Sign Out</button>
+</div>
+
+<div class="modal-overlay no-print" id="manageListsModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3>📋 Manage Lists</h3>
+      <span class="modal-close" onclick="closeManageModal()">✕</span>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+      <button class="manage-tab-btn active" onclick="showManageTab('courses')">📚 Courses</button>
+      <button class="manage-tab-btn" onclick="showManageTab('standards')">🏫 Standards</button>
+      <button class="manage-tab-btn" onclick="showManageTab('users')">👥 Users</button>
+    </div>
+    <div id="manageListContent" style="overflow-y:auto;flex:1;"></div>
+  </div>
+</div>
+
+  <main class="app-shell" id="mainFormArea">
+    <section class="toolbar" aria-label="Form actions">
+      <div class="toolbar__title">
+        <strong>MYEDEN Digital Payment Form</strong>
+        <span>Version <span id="toolbarVersion">MEG-TEC-V2 v2026.08.10-10:00</span> · Multi-page submission</span>
+      </div>
+      <label class="toolbar__field" for="teacherNameInput">
+        Teacher's Name
+        <input id="teacherNameInput" type="text" style="width:160px;" placeholder="Same across all pages">
+      </label>
+      <label class="toolbar__field" for="companySelectInput">
+        Company
+        <select id="companySelectInput">
+          <option value="MEG">MyEden Group Sdn Bhd</option>
+          <option value="MEH">MyEden Edu Hub</option>
+        </select>
+      </label>
+      <label class="toolbar__field" for="printOrientation">
+        Print Layout
+        <select id="printOrientation">
+          <option value="portrait" selected>Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </label>
+      <label class="toolbar__field" for="pageCountInput">
+        Number of Pages
+        <input id="pageCountInput" type="number" min="1" max="50" value="1" style="width:70px;">
+      </label>
+      <button class="btn btn--primary" type="button" id="printBtn">Print / PDF</button>
+      <button class="btn btn--danger" type="button" id="resetBtn">Reset All Pages</button>
+      <button class="btn" type="button" id="loadTemplateBtn" style="display:none;">📂 Load Template</button>
+      <button class="btn" type="button" id="saveTemplateBtn" style="display:none;">💾 Save as Template</button>
+      <button class="btn btn--primary" type="button" id="submitBtn" style="display:none;">✅ Submit to PIC</button>
+      <button class="btn" type="button" id="btnManageLists" style="display:none;">📋 Manage Lists</button>
+      <button class="btn" type="button" id="btnPicReview" style="display:none;">🔍 Review Submissions</button>
+      <button class="btn" type="button" id="btnPicReports" style="display:none;">📊 Reports</button>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <div id="pagesContainer"></div>
+    <div class="grouping-prompt-overlay" id="groupingPromptOverlay">
+      <div class="grouping-prompt-box">
+        <h3>Group pages by course?</h3>
+        <p>Two or more pages share the same course name. Would you like me to group the same course in sequence?</p>
+        <div class="grouping-prompt-actions">
+          <button type="button" class="btn-no" id="groupingPromptNo">No</button>
+          <button type="button" class="btn-yes" id="groupingPromptYes">Yes</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grouping-prompt-overlay" id="templateLoginPromptOverlay">
+      <div class="grouping-prompt-box">
+        <h3 id="templateLoginPromptTitle">Template Profiles</h3>
+        <p id="templateLoginPromptText"></p>
+        <div class="grouping-prompt-actions" id="templateLoginPromptActionsExisting" style="display:none;">
+          <button type="button" class="btn-no" id="templateLoginCreateNewBtn">Create New</button>
+          <button type="button" class="btn-yes" id="templateLoginChooseBtn">Choose Template</button>
+        </div>
+        <div class="grouping-prompt-actions" id="templateLoginPromptActionsNone" style="display:none;">
+          <button type="button" class="btn-no" id="templateLoginSkipBtn">Not Now</button>
+          <button type="button" class="btn-yes" id="templateLoginCreateFirstBtn">Create New Template</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grouping-prompt-overlay" id="templatePickerOverlay">
+      <div class="grouping-prompt-box" style="max-width:560px;width:92%;">
+        <h3>Choose a Template</h3>
+        <p>Selecting a template sets the page count and each page's course + standards to match. Student names, fees, and dates are not included — those still come from typing fresh or Load Previous Month's Template.</p>
+        <div id="templatePickerList" style="max-height:340px;overflow-y:auto;margin:14px 0;"></div>
+        <div class="grouping-prompt-actions">
+          <button type="button" class="btn-no" id="templatePickerCancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="grouping-prompt-overlay" id="saveTemplateOverlay">
+      <div class="grouping-prompt-box">
+        <h3>Save as Template</h3>
+        <p>Saves the current pages' courses and standards as a reusable layout — not student names, fees, or dates.</p>
+        <input type="text" id="saveTemplateNameInput" placeholder="Template name (e.g. Term 3 Roster)" style="width:100%;padding:8px 10px;border:1px solid #c8d4e0;border-radius:6px;margin-bottom:14px;box-sizing:border-box;">
+        <div class="grouping-prompt-actions">
+          <button type="button" class="btn-no" id="saveTemplateCancelBtn">Cancel</button>
+          <button type="button" class="btn-yes" id="saveTemplateConfirmBtn">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="version-footer no-print">
+      <span>MYEDEN Digital Payment Form (V2) · <strong id="versionPreview">MEG-TEC-V2 v2026.08.10-10:00</strong></span>
+    </div>
+
+  </main>
+
+  <section class="app-shell no-print" id="picReviewScreen" style="display:none;">
+    <div class="pic-screen-header">
+      <h2>🔍 Review Submissions</h2>
+      <button class="btn" type="button" id="btnBackToForm">← Back to Form</button>
+    </div>
+    <div class="pic-filters">
+      <label>Status
+        <select id="reviewStatusFilter">
+          <option value="submitted">Pending Review</option>
+          <option value="done">Done</option>
+          <option value="">All</option>
+        </select>
+      </label>
+      <button class="btn" type="button" id="btnRefreshReview">↻ Refresh</button>
+    </div>
+    <div id="picReviewList"></div>
+  </section>
+
+  <section class="app-shell no-print" id="picReportsScreen" style="display:none;">
+    <div class="pic-screen-header">
+      <h2>📊 Reports</h2>
+      <button class="btn" type="button" id="btnBackToFormFromReports">← Back to Form</button>
+    </div>
+    <div class="pic-filters">
+      <label>Teacher <input type="text" id="reportTeacherFilter" placeholder="Teacher name"></label>
+      <label>Course <select id="reportCourseFilter"><option value="">All courses</option></select></label>
+      <label>Standard <select id="reportStandardFilter"><option value="">All standards</option></select></label>
+      <label>Month <select id="reportMonthFilter"><option value="">All months</option></select></label>
+      <label>Year <input type="number" id="reportYearFilter" placeholder="e.g. 2026"></label>
+      <button class="btn" type="button" id="btnRunReport">Run Report</button>
+      <button class="btn" type="button" id="btnClearReport">Clear</button>
+    </div>
+    <div id="reportSummary"></div>
+    <div id="reportList"></div>
+  </section>
+
+
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load', function(){
-    navigator.serviceWorker.register('service-worker.js').catch(function(err){
-      console.warn('Service worker registration failed (non-fatal):', err);
+/* ===================== PAGE MANAGEMENT (MEG-TEC-V2 orchestrator) ===================== */
+let pages = []; // [{ id, wrap, iframe, loaded }]
+let nextPageId = 1;
+let groupingPromptShown = false; // avoid re-prompting repeatedly for the same duplicate situation
+
+function createPage(){
+  const id = nextPageId++;
+  const wrap = document.createElement('div');
+  wrap.className = 'tec-page-wrap';
+  wrap.dataset.pageId = id;
+  wrap.innerHTML = `
+    <div class="tec-page-tab">
+      <span class="tec-page-tab-label">Page</span>
+      <span class="tec-page-course-badge"></span>
+      <button type="button" class="tec-page-remove" title="Remove this page">✕</button>
+    </div>
+    <iframe class="tec-page-frame" src="pages/page-template.html?v=${encodeURIComponent(VERSION)}"></iframe>
+  `;
+  document.getElementById('pagesContainer').appendChild(wrap);
+  const page = { id, wrap, iframe: wrap.querySelector('iframe'), loaded: false };
+  pages.push(page);
+  wrap.querySelector('.tec-page-remove').addEventListener('click', () => removePageById(id));
+  page.iframe.addEventListener('load', () => {
+    page.loaded = true;
+    attachPageCourseWatcher(page);
+    updatePageTabBadge(page);
+    pushTeacherNameToPage(page);
+    pushCompanyToPage(page);
+    pushListsToPage(page);
+  });
+  renumberPageTabs();
+  syncPageCountInput();
+  return page;
+}
+
+function removePageById(id){
+  if(pages.length <= 1) return; // always keep at least 1 page
+  const idx = pages.findIndex(p => p.id === id);
+  if(idx === -1) return;
+  pages[idx].wrap.remove();
+  pages.splice(idx, 1);
+  renumberPageTabs();
+  syncPageCountInput();
+  groupingPromptShown = false;
+  checkCourseGrouping();
+}
+
+function renumberPageTabs(){
+  pages.forEach((p, i) => {
+    p.wrap.querySelector('.tec-page-tab-label').textContent = `Page ${i + 1}`;
+    p.wrap.querySelector('.tec-page-remove').disabled = pages.length <= 1;
+    p.wrap.style.order = i; // keeps visual order in sync with array order at all times
+  });
+}
+
+function syncPageCountInput(){
+  const input = document.getElementById('pageCountInput');
+  if(input) input.value = pages.length;
+}
+
+function setPageCount(n){
+  n = Math.max(1, Math.min(50, Math.floor(n) || 1));
+  while(pages.length < n) createPage();
+  while(pages.length > n) removePageById(pages[pages.length - 1].id);
+}
+
+// Polls a page's own Course dropdown for changes — same-origin iframe, direct
+// DOM access is safe. A short interval rather than a live event hook keeps
+// this simple and robust regardless of how the page-template's internals
+// wire their own change handlers.
+function attachPageCourseWatcher(page){
+  let lastCourse = getPageCourse(page);
+  updatePageTabBadge(page);
+  const interval = setInterval(() => {
+    if(!page.wrap.isConnected){ clearInterval(interval); return; }
+    const nowCourse = getPageCourse(page);
+    if(nowCourse !== lastCourse){
+      lastCourse = nowCourse;
+      updatePageTabBadge(page);
+      groupingPromptShown = false;
+      checkCourseGrouping();
+    }
+  }, 800);
+}
+
+function getPageDoc(page){
+  try{
+    return page.iframe.contentWindow && page.iframe.contentWindow.document;
+  }catch(e){ return null; }
+}
+
+// Teacher's Name is shared across the whole submission — the orchestrator
+// owns the single input, and pushes it into every page (each page still has
+// its own #teacherName field internally, from the unmodified page template).
+function pushTeacherNameToPage(page){
+  const doc = getPageDoc(page);
+  if(!doc) return;
+  const input = doc.getElementById('teacherName');
+  const orchestratorValue = document.getElementById('teacherNameInput').value;
+  if(input && orchestratorValue) input.value = orchestratorValue;
+}
+function pushTeacherNameToAllPages(){
+  pages.forEach(pushTeacherNameToPage);
+}
+document.getElementById('teacherNameInput').addEventListener('input', pushTeacherNameToAllPages);
+
+// Company is also shared across the whole submission (same letterhead on
+// every page) — same push pattern as Teacher's Name.
+function pushCompanyToPage(page){
+  const doc = getPageDoc(page);
+  if(!doc) return;
+  const select = doc.getElementById('companySelect');
+  if(select){
+    select.value = document.getElementById('companySelectInput').value;
+    select.dispatchEvent(new Event('change')); // triggers the page's own updateCompanyLogo()
+  }
+}
+function pushCompanyToAllPages(){
+  pages.forEach(pushCompanyToPage);
+}
+document.getElementById('companySelectInput').addEventListener('change', pushCompanyToAllPages);
+
+function getPageCourse(page){
+  const doc = getPageDoc(page);
+  if(!doc) return '';
+  const el = doc.getElementById('course');
+  return el ? el.value : '';
+}
+function getPageCourseText(page){
+  const doc = getPageDoc(page);
+  if(!doc) return '';
+  const el = doc.getElementById('course');
+  if(!el || !el.value) return '';
+  const opt = el.querySelector(`option[value="${CSS.escape(el.value)}"]`);
+  return opt ? opt.textContent : el.value;
+}
+function updatePageTabBadge(page){
+  const badge = page.wrap.querySelector('.tec-page-course-badge');
+  const text = getPageCourseText(page);
+  badge.textContent = text ? `— ${text}` : '';
+}
+
+function checkCourseGrouping(){
+  const counts = {};
+  pages.forEach(p => {
+    const c = getPageCourse(p);
+    if(c) counts[c] = (counts[c] || 0) + 1;
+  });
+  const hasDuplicate = Object.values(counts).some(n => n > 1);
+  if(hasDuplicate && !groupingPromptShown){
+    groupingPromptShown = true;
+    document.getElementById('groupingPromptOverlay').style.display = 'flex';
+  }
+}
+
+function reorderPagesByCourse(){
+  const firstSeenIndex = {};
+  pages.forEach((p, i) => {
+    const c = getPageCourse(p) || '';
+    if(!(c in firstSeenIndex)) firstSeenIndex[c] = i;
+  });
+  const sorted = [...pages].sort((a, b) => {
+    const ca = getPageCourse(a) || '', cb = getPageCourse(b) || '';
+    return firstSeenIndex[ca] - firstSeenIndex[cb];
+  });
+  // Reorder logically (pages array) — renumberPageTabs() below applies the
+  // matching CSS order to each page's wrapper, achieving the visual reorder
+  // without ever moving the actual DOM nodes. Moving an <iframe> element
+  // (even via a "harmless" appendChild to reposition among siblings)
+  // reliably triggers a full reload of that iframe's content in real
+  // browsers, wiping out everything the teacher had entered on every page.
+  pages = sorted;
+  renumberPageTabs();
+}
+
+document.getElementById('groupingPromptYes').addEventListener('click', () => {
+  document.getElementById('groupingPromptOverlay').style.display = 'none';
+  reorderPagesByCourse();
+});
+document.getElementById('groupingPromptNo').addEventListener('click', () => {
+  document.getElementById('groupingPromptOverlay').style.display = 'none';
+});
+
+// ---------- Template Profiles ----------
+// A "template" is a full saved SNAPSHOT of a multi-page submission —
+// students, fees, standards, time duration, everything except dates
+// (which are month-specific and deliberately excluded, matching how
+// "Load Previous Month's Template" already works). Lets a teacher
+// reload a known class roster wholesale instead of retyping it.
+let cachedTemplatesForPicker = [];
+let currentTemplateId = null;       // set when a template is applied this session
+let currentTemplateSnapshot = null; // the template's own pages data, for change detection at submit time
+
+async function fetchUserTemplates(){
+  const { data, error } = await sb.from('tec_v2_templates')
+    .select('*')
+    .eq('created_by', currentUser.id)
+    .order('created_at', { ascending: false });
+  if(error){ console.error('Failed to load templates:', error); return []; }
+  return data || [];
+}
+
+function formatTemplateContents(template){
+  return (template.pages || [])
+    .map(p => `${p.course_name}(${(p.standards || []).join(',')})`)
+    .join(', ');
+}
+
+function showTemplatePicker(templates){
+  const listEl = document.getElementById('templatePickerList');
+  listEl.innerHTML = templates.length === 0
+    ? '<div class="manage-empty">No templates saved yet.</div>'
+    : templates.map(t => `
+      <div class="manage-list-item" style="cursor:pointer;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;" onclick="selectTemplate('${t.id}')">
+        <strong>${escapeHtmlTec(t.name)}</strong>
+        <span style="color:var(--muted);font-size:12.5px;">${escapeHtmlTec(formatTemplateContents(t))}</span>
+      </div>`).join('');
+  document.getElementById('templatePickerOverlay').style.display = 'flex';
+}
+
+async function openTemplatePicker(){
+  cachedTemplatesForPicker = await fetchUserTemplates();
+  showTemplatePicker(cachedTemplatesForPicker);
+}
+
+async function selectTemplate(templateId){
+  const template = cachedTemplatesForPicker.find(t => t.id === templateId);
+  if(!template) return;
+  document.getElementById('templatePickerOverlay').style.display = 'none';
+  await applyTemplate(template);
+}
+
+// Applies a template's full snapshot (course, standards, time, students —
+// no dates) to each page. Tracks which template was applied and its
+// original data, so submit time can detect whether anything changed.
+async function applyTemplate(template){
+  const pagesData = template.pages || [];
+  setPageCount(Math.max(1, pagesData.length));
+  await Promise.all(pages.map(p => p.loaded ? Promise.resolve() : new Promise(resolve => {
+    p.iframe.addEventListener('load', resolve, { once: true });
+  })));
+  pages.forEach((page, i) => {
+    const pd = pagesData[i];
+    if(!pd) return;
+    const doc = getPageDoc(page);
+    const win = page.iframe.contentWindow;
+    if(!doc || !win) return;
+    const courseSelect = doc.getElementById('course');
+    if(courseSelect){
+      courseSelect.value = pd.course_name;
+      courseSelect.dispatchEvent(new Event('change'));
+    }
+    doc.querySelectorAll('#standardCheckboxes input').forEach(cb => {
+      cb.checked = (pd.standards || []).includes(cb.value);
+    });
+    const timeFromEl = doc.getElementById('timeFrom');
+    const timeToEl = doc.getElementById('timeTo');
+    if(timeFromEl && pd.time_from) timeFromEl.value = pd.time_from;
+    if(timeToEl && pd.time_to) timeToEl.value = pd.time_to;
+    if(win.TEC_applyStudentsTemplate) win.TEC_applyStudentsTemplate(pd.students || []);
+    updatePageTabBadge(page);
+  });
+  currentTemplateId = template.id;
+  currentTemplateSnapshot = pagesData;
+  groupingPromptShown = false;
+  checkCourseGrouping();
+}
+
+function pageHasAnyData(){
+  return pages.some(page => {
+    const doc = getPageDoc(page);
+    return Boolean(doc?.getElementById('course')?.value);
+  });
+}
+
+// Captures the current live pages into the same shape a template stores —
+// reused for both "Save as Template" and submit-time change detection.
+function captureCurrentPagesSnapshot(){
+  return pages.map(page => {
+    const doc = getPageDoc(page);
+    const win = page.iframe.contentWindow;
+    const course = doc?.getElementById('course')?.value || '';
+    const standards = doc ? [...doc.querySelectorAll('#standardCheckboxes input:checked')].map(cb => cb.value) : [];
+    const timeFrom = doc?.getElementById('timeFrom')?.value || '';
+    const timeTo = doc?.getElementById('timeTo')?.value || '';
+    const formData = win?.TEC_getFormData ? win.TEC_getFormData() : { students: [] };
+    const students = (formData.students || []).map(s => ({
+      name: s.name, monthlyFee: s.monthlyFee, venueFee: s.venueFee
+    })); // deliberately no dates — month-specific, matching Load Previous Month's Template
+    return { course_name: course, standards, time_from: timeFrom, time_to: timeTo, students };
+  }).filter(p => p.course_name);
+}
+
+document.getElementById('loadTemplateBtn').addEventListener('click', async () => {
+  if(pageHasAnyData()){
+    if(!confirm("Loading a template will replace your current pages' data. Continue?")) return;
+  }
+  await openTemplatePicker();
+});
+document.getElementById('templatePickerCancelBtn').addEventListener('click', () => {
+  document.getElementById('templatePickerOverlay').style.display = 'none';
+});
+
+document.getElementById('saveTemplateBtn').addEventListener('click', () => {
+  document.getElementById('saveTemplateNameInput').value = '';
+  document.getElementById('saveTemplateOverlay').style.display = 'flex';
+});
+document.getElementById('saveTemplateCancelBtn').addEventListener('click', () => {
+  document.getElementById('saveTemplateOverlay').style.display = 'none';
+});
+document.getElementById('saveTemplateConfirmBtn').addEventListener('click', async () => {
+  const name = document.getElementById('saveTemplateNameInput').value.trim();
+  if(!name){ alert('Enter a name for this template.'); return; }
+  const pagesData = captureCurrentPagesSnapshot();
+  if(pagesData.length === 0){ alert('Select at least one course before saving a template.'); return; }
+  const { data, error } = await sb.from('tec_v2_templates')
+    .insert({ created_by: currentUser.id, name, pages: pagesData })
+    .select().single();
+  if(error){ alert('Failed to save template: ' + error.message); return; }
+  document.getElementById('saveTemplateOverlay').style.display = 'none';
+  currentTemplateId = data.id;
+  currentTemplateSnapshot = pagesData;
+  alert(`Template "${name}" saved.`);
+});
+
+// Login-time prompt — offered once per sign-in, before any page is created.
+async function checkAndPromptTemplates(){
+  const templates = await fetchUserTemplates();
+  cachedTemplatesForPicker = templates;
+  const overlay = document.getElementById('templateLoginPromptOverlay');
+  const text = document.getElementById('templateLoginPromptText');
+  const actionsExisting = document.getElementById('templateLoginPromptActionsExisting');
+  const actionsNone = document.getElementById('templateLoginPromptActionsNone');
+  if(templates.length === 0){
+    text.textContent = "You don't have any template created yet, would you like to create a new template?";
+    actionsExisting.style.display = 'none';
+    actionsNone.style.display = 'flex';
+  } else {
+    text.textContent = `You have (${templates.length}) template${templates.length === 1 ? '' : 's'} existed in database, would you like to choose one or proceed with a new one?`;
+    actionsExisting.style.display = 'flex';
+    actionsNone.style.display = 'none';
+  }
+  overlay.style.display = 'flex';
+}
+document.getElementById('templateLoginChooseBtn').addEventListener('click', () => {
+  document.getElementById('templateLoginPromptOverlay').style.display = 'none';
+  showTemplatePicker(cachedTemplatesForPicker);
+});
+document.getElementById('templateLoginCreateNewBtn').addEventListener('click', () => {
+  document.getElementById('templateLoginPromptOverlay').style.display = 'none';
+  setPageCount(1);
+});
+document.getElementById('templateLoginSkipBtn').addEventListener('click', () => {
+  document.getElementById('templateLoginPromptOverlay').style.display = 'none';
+  setPageCount(1);
+});
+document.getElementById('templateLoginCreateFirstBtn').addEventListener('click', () => {
+  document.getElementById('templateLoginPromptOverlay').style.display = 'none';
+  setPageCount(1);
+  alert('Set up your pages the way you want, then click "Save as Template" in the toolbar to save this layout for next time.');
+});
+
+// Submit-time "update or maintain" check — only relevant if a template was
+// used to populate this session's pages, and only checked at final
+// submission (not autosave, not draft).
+function templateSnapshotsDiffer(a, b){
+  return JSON.stringify(a) !== JSON.stringify(b);
+}
+async function maybeOfferTemplateUpdate(){
+  if(!currentTemplateId || !currentTemplateSnapshot) return;
+  const nowSnapshot = captureCurrentPagesSnapshot();
+  if(!templateSnapshotsDiffer(currentTemplateSnapshot, nowSnapshot)) return; // nothing changed
+  const wantsUpdate = confirm(
+    "You have added new / removed / changed records compared to the template you loaded.\n\n" +
+    "Press OK to UPDATE the template with these changes, or Cancel to MAINTAIN the template as it was."
+  );
+  if(wantsUpdate){
+    const { error } = await sb.from('tec_v2_templates')
+      .update({ pages: nowSnapshot, updated_at: new Date().toISOString() })
+      .eq('id', currentTemplateId);
+    if(error){ alert('Failed to update template: ' + error.message); return; }
+    currentTemplateSnapshot = nowSnapshot;
+  }
+  // "Maintain" needs no action — the template row is simply left untouched.
+}
+
+document.getElementById('pageCountInput').addEventListener('change', (e) => {
+  setPageCount(parseInt(e.target.value, 10));
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if(!confirm('Reset all pages? This clears every page back to one blank page — courses, students, and everything else entered will be lost.')) return;
+  currentTemplateId = null;
+  currentTemplateSnapshot = null;
+  // Remove every existing page (bypassing removePageById's "keep at least
+  // 1" guard, since this action explicitly wants a genuinely fresh start)
+  // and create one brand new page — a fresh iframe load guarantees a truly
+  // blank state in a way clearing an existing page's DOM by hand wouldn't.
+  pages.forEach(p => p.wrap.remove());
+  pages = [];
+  createPage();
+});
+
+// Computes course-grouped ordering (independent of on-screen order — this is
+// what both printing and serial assignment use, per the confirmed rule that
+// printing always enforces course-grouped order regardless of the on-screen
+// "No" choice), assigns one serial per course-name group, and returns each
+// page's group info for total computation.
+function computeCourseGroups(){
+  const firstSeenIndex = {};
+  pages.forEach((p, i) => {
+    const c = getPageCourse(p) || '';
+    if(!(c in firstSeenIndex)) firstSeenIndex[c] = i;
+  });
+  const ordered = [...pages].sort((a, b) => {
+    const ca = getPageCourse(a) || '', cb = getPageCourse(b) || '';
+    return firstSeenIndex[ca] - firstSeenIndex[cb];
+  });
+  const serialByCourse = {};
+  const groupPages = {};
+  ordered.forEach(p => {
+    const c = getPageCourse(p) || '';
+    if(!serialByCourse[c]) serialByCourse[c] = generateSerialForCourse(lookupCourseCode(c));
+    if(!groupPages[c]) groupPages[c] = [];
+    groupPages[c].push(p);
+  });
+  return { ordered, serialByCourse, groupPages };
+}
+
+// Looks up the admin-assigned serial code for a course name directly from the
+// managed course list — no parsing, no guessing. Falls back to the course
+// name itself only if a course somehow has no code set (shouldn't normally
+// happen, since adding a course now requires one).
+function lookupCourseCode(courseName){
+  if(!courseName) return '';
+  const match = (cachedTecCourses || []).find(c => c.name === courseName);
+  return (match && match.code) ? match.code : courseName;
+}
+
+function generateSerialForCourse(courseCode){
+  if(!courseCode) return '';
+  const now = new Date();
+  const pad2 = n => String(n).padStart(2, '0');
+  return `${courseCode}-${pad2(now.getDate())}${pad2(now.getMonth() + 1)}${now.getFullYear()}${pad2(now.getHours())}${pad2(now.getMinutes())}`;
+}
+
+// Pushes computed serials + grand totals into each page's iframe: every page
+// gets its group's serial in the Serial No. field; only the LAST page in a
+// multi-page course group shows the Grand Total panel.
+function applyGroupingToPages(){
+  const { serialByCourse, groupPages } = computeCourseGroups();
+  Object.entries(groupPages).forEach(([course, groupList]) => {
+    const serial = serialByCourse[course];
+    groupList.forEach((p, idx) => {
+      const doc = getPageDoc(p);
+      if(!doc) return;
+      const serialInput = doc.getElementById('serialNo');
+      if(serialInput) serialInput.value = serial;
+      const grandTotalSection = doc.getElementById('courseGroupGrandTotal');
+      if(!grandTotalSection) return;
+      const isLastInGroup = idx === groupList.length - 1;
+      if(isLastInGroup && groupList.length > 1){
+        const sum = groupList.reduce((acc, gp) => {
+          const totalEl = getPageDoc(gp)?.getElementById('totalNet');
+          return acc + (parseFloat(totalEl?.textContent.replace(/,/g, '')) || 0);
+        }, 0);
+        doc.getElementById('grandTotalCourseName').textContent = getPageCourseText(p) || course;
+        doc.getElementById('grandTotalPageCount').textContent = groupList.length;
+        doc.getElementById('grandTotalValue').textContent = sum.toFixed(2);
+        grandTotalSection.style.display = 'flex';
+      } else {
+        grandTotalSection.style.display = 'none';
+      }
     });
   });
 }
-</script>
-<style>
-  :root{
-    --bg-0:#0a0e1a; --bg-1:#0f1526; --card:#151d35; --card-hover:#1b2440;
-    --border:rgba(94,150,255,0.16); --border-strong:rgba(94,150,255,0.35);
-    --text-1:#eaf0ff; --text-2:#8b9bc4; --text-3:#5a6890;
-    --accent:#4fd8c4; --accent-2:#5e96ff; --accent-purple:#a78bfa;
-    --glow-accent: 0 0 24px rgba(79,216,196,0.35);
-    --glow-blue: 0 0 24px rgba(94,150,255,0.3);
-    --logo-glow-1: rgba(94,150,255,0.55); --logo-glow-2: rgba(79,216,196,0.45); --logo-glow-3: rgba(167,139,250,0.4);
-    --radius:14px; --font:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;
-  }
-  [data-theme="light"]{
-    --bg-0:#eef2fa; --bg-1:#f5f8fd; --card:#ffffff; --card-hover:#f0f5ff;
-    --border:rgba(30,60,120,0.10); --border-strong:rgba(30,60,120,0.22);
-    --text-1:#132043; --text-2:#54628c; --text-3:#8b96b8;
-    --accent:#0d9488; --accent-2:#2563eb; --accent-purple:#7c3aed;
-    --glow-accent: 0 4px 20px rgba(13,148,136,0.15);
-    --glow-blue: 0 4px 20px rgba(37,99,235,0.15);
-    --logo-glow-1: rgba(37,99,235,0.35); --logo-glow-2: rgba(13,148,136,0.3); --logo-glow-3: rgba(124,58,237,0.25);
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:var(--font);
-    background:radial-gradient(ellipse 900px 500px at 15% -10%, rgba(94,150,255,0.10), transparent),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(79,216,196,0.08), transparent), var(--bg-0);
-    color:var(--text-1); min-height:100vh; transition:background .35s ease, color .35s ease;
-  }
-  [data-theme="light"] body{
-    background:radial-gradient(ellipse 900px 500px at 15% -10%, rgba(37,99,235,0.05), transparent),
-      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(13,148,136,0.04), transparent), var(--bg-0);
-  }
-  .theme-toggle{
-    position:fixed;top:20px;right:20px;z-index:999;display:flex;align-items:center;gap:8px;
-    background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 8px 6px 16px;
-    box-shadow:var(--glow-blue);cursor:pointer;user-select:none;
-  }
-  .theme-toggle span{font-size:12px;color:var(--text-2);font-weight:600;}
-  .toggle-track{width:44px;height:24px;border-radius:999px;background:linear-gradient(90deg,var(--accent-2),var(--accent));position:relative;transition:.3s;}
-  .toggle-thumb{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:.3s;box-shadow:0 1px 4px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:11px;}
-  [data-theme="light"] .toggle-thumb{left:23px;}
 
-  .screen{display:none;min-height:100vh;padding:90px 24px 60px;}
-  .screen.active{display:block;}
-  .screen.active.center{display:flex;align-items:center;justify-content:center;}
-  .login-wrap{width:420px;max-width:92vw;text-align:center;}
-  .logo-orb-wrap{width:104px;height:104px;margin:0 auto 20px;position:relative;}
-  .logo-orb-wrap::before{
-    content:'';position:absolute;inset:-12px;border-radius:32px;
-    background:radial-gradient(circle at 25% 25%, var(--logo-glow-1), transparent 55%),
-      radial-gradient(circle at 75% 30%, var(--logo-glow-2), transparent 55%),
-      radial-gradient(circle at 50% 75%, var(--logo-glow-3), transparent 55%);
-    filter:blur(16px); animation:neonSpin 5s linear infinite, neonPulse 2.4s ease-in-out infinite; z-index:0;
-  }
-  .logo-orb{position:relative;z-index:1;width:88px;height:88px;margin:8px;border-radius:24px;background:#fff;
-    display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,0.6) inset, 0 0 30px var(--logo-glow-1);padding:14px;}
-  .logo-orb img{width:100%;height:100%;object-fit:contain;}
-  @keyframes neonSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-  @keyframes neonPulse{0%,100%{opacity:0.7;}50%{opacity:1;}}
-  .login-title{font-size:28px;font-weight:700;letter-spacing:-.01em;margin-bottom:4px;
-    background:linear-gradient(90deg,var(--text-1),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-  .login-sub{font-size:13px;color:var(--text-2);margin-bottom:32px;}
-  .login-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:var(--glow-blue);text-align:left;}
-  .field-label{font-size:11px;font-weight:700;color:var(--text-2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
-  .field-input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-1);color:var(--text-1);font-size:14px;margin-bottom:16px;font-family:var(--font);}
-  .field-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,216,196,0.15);}
-  .field-input::placeholder{color:var(--text-3);}
-  .login-btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;
-    background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#04101f;cursor:pointer;box-shadow:var(--glow-accent);font-family:var(--font);}
-  .login-foot{margin-top:20px;font-size:12px;color:var(--text-2);text-align:center;}
-  .login-foot a{color:var(--accent);text-decoration:none;font-weight:600;cursor:pointer;}
-  .version-stamp{margin-top:28px;font-size:11px;color:var(--text-3);}
-  .auth-error{color:#f87171;font-size:12px;margin-bottom:10px;min-height:16px;}
-  .auth-forgot{text-align:right;font-size:11.5px;margin:-8px 0 14px;}
-  .auth-forgot a{color:var(--accent);cursor:pointer;text-decoration:none;}
-
-  .dash-header{display:flex;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto 8px;}
-  .dash-title{font-size:26px;font-weight:700;letter-spacing:-.01em;}
-  .dash-sub{font-size:13px;color:var(--text-2);margin-top:4px;}
-  .welcome-block{max-width:1080px;margin:0 auto 28px;}
-  .welcome-title{font-size:18px;font-weight:700;margin-bottom:4px;}
-  .welcome-sub{font-size:13px;color:var(--text-2);}
-  .user-chip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:6px 16px 6px 6px;}
-  .user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent-purple),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
-  .user-name{font-size:13px;font-weight:600;}
-  .signout-btn{background:transparent;border:1px solid var(--border);color:var(--text-2);font-size:11px;font-weight:600;padding:5px 12px;border-radius:999px;cursor:pointer;margin-left:8px;font-family:var(--font);}
-
-  .dash-grid{max-width:1080px;margin:36px auto 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;}
-  .form-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;cursor:pointer;transition:.25s;position:relative;text-decoration:none;color:inherit;display:block;}
-  .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-accent,var(--accent));border-radius:var(--radius) var(--radius) 0 0;}
-  .form-card:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:0 12px 32px rgba(0,0,0,0.25);}
-  .card-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;background:var(--card-icon-bg,rgba(79,216,196,0.15));}
-  .card-name{font-size:16px;font-weight:700;margin-bottom:6px;}
-  .card-desc{font-size:12.5px;color:var(--text-2);line-height:1.5;margin-bottom:16px;min-height:38px;}
-  .card-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:999px;background:var(--badge-bg,rgba(79,216,196,0.15));color:var(--badge-color,var(--accent));}
-  .card-arrow{position:absolute;bottom:20px;right:20px;font-size:18px;color:var(--text-3);transition:.25s;}
-  .form-card:hover .card-arrow{color:var(--accent);transform:translateX(3px);}
-  .card-preview-pop{
-    display:none;position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);
-    width:280px;background:var(--card);border:1px solid var(--border-strong);border-radius:10px;
-    box-shadow:0 12px 32px rgba(0,0,0,0.35);overflow:hidden;z-index:20;pointer-events:none;
-  }
-  .form-card:hover .card-preview-pop{display:block;}
-  .card-preview-pop img{width:100%;display:block;border-bottom:1px solid var(--border);}
-  .card-preview-caption{padding:8px 10px;font-size:11px;color:var(--text-2);}
-
-  .empty-state{max-width:1080px;margin:80px auto 0;text-align:center;padding:60px 20px;background:var(--card);border:1px dashed var(--border-strong);border-radius:20px;}
-  .empty-icon{font-size:44px;margin-bottom:16px;opacity:.7;}
-  .empty-title{font-size:18px;font-weight:700;margin-bottom:8px;}
-  .empty-desc{font-size:13px;color:var(--text-2);max-width:360px;margin:0 auto;line-height:1.6;}
-  .footer-note{max-width:1080px;margin:50px auto 0;text-align:center;font-size:11px;color:var(--text-3);}
-  .loading-note{text-align:center;color:var(--text-2);font-size:13px;margin-top:60px;}
-</style>
-</head>
-<body data-theme="dark">
-
-<div class="theme-toggle" onclick="toggleTheme()">
-  <span id="themeLabel">Dark</span>
-  <div class="toggle-track"><div class="toggle-thumb" id="toggleThumb">🌙</div></div>
-</div>
-
-<!-- ============ LOGIN ============ -->
-<div class="screen active center" id="screen-login">
-  <div class="login-wrap">
-    <div class="logo-orb-wrap"><div class="logo-orb"><img id="logoImg" src="" alt="MyEden Group logo"></div></div>
-    <div class="login-title">MEG-FORMS</div>
-    <div class="login-sub">MyEden Group — Unified Forms Portal</div>
-
-    <div class="login-card" id="loginCard">
-      <div class="auth-error" id="loginError"></div>
-      <div class="field-label">Email</div>
-      <input class="field-input" id="loginEmail" placeholder="you@myeden.com">
-      <div class="field-label">Password</div>
-      <input class="field-input" id="loginPassword" type="password" placeholder="••••••••••">
-      <div class="auth-forgot"><a onclick="showAuthBox('forgot')">Forgot password?</a></div>
-      <button class="login-btn" onclick="doSignIn()">Sign In →</button>
-    </div>
-
-    <div class="login-card" id="signupCard" style="display:none;">
-      <div class="auth-error" id="signupError"></div>
-      <div class="field-label">Full Name</div>
-      <input class="field-input" id="signupName" placeholder="Your name">
-      <div class="field-label">Email</div>
-      <input class="field-input" id="signupEmail" placeholder="you@myeden.com">
-      <div class="field-label">Password</div>
-      <input class="field-input" id="signupPassword" type="password" placeholder="Min 6 characters">
-      <button class="login-btn" onclick="doSignUp()">Sign Up →</button>
-    </div>
-
-    <div class="login-card" id="forgotCard" style="display:none;">
-      <div class="auth-error" id="forgotError"></div>
-      <div class="field-label">Email</div>
-      <input class="field-input" id="forgotEmail" placeholder="you@myeden.com">
-      <button class="login-btn" onclick="doForgotPassword()">Send Reset Link →</button>
-    </div>
-
-    <div class="login-foot" id="loginFoot">No account yet? <a onclick="showAuthBox('signup')">Sign up</a></div>
-    <div class="version-stamp">DB-MEG-FORMS v2026.08.09-13:30</div>
-  </div>
-</div>
-
-<!-- ============ DASHBOARD ============ -->
-<div class="screen" id="screen-dashboard">
-  <div class="dash-header">
-    <div>
-      <div class="dash-title">Your forms</div>
-      <div class="dash-sub" id="dashSub">Loading...</div>
-    </div>
-    <div class="user-chip">
-      <div class="user-avatar" id="userAvatar">--</div>
-      <div class="user-name" id="userName">--</div>
-      <button class="signout-btn" id="adminLinkBtn" style="display:none;" onclick="window.location.href='admin.html'">⚙️ Admin</button>
-      <button class="signout-btn" onclick="doSignOut()">Sign out</button>
-    </div>
-  </div>
-
-  <div class="welcome-block">
-    <div class="welcome-title">Welcome to MyEden Group's Unified Forms Portal</div>
-    <div class="welcome-sub">Please select your form to begin with...</div>
-  </div>
-
-  <div id="dashContent">
-    <div class="loading-note">Loading your forms...</div>
-  </div>
-  <div class="footer-note">Ref: DB-MEG-FORMS v2026.08.09-13:30</div>
-</div>
-
-<script>
+/* ===================== SUPABASE / AUTH / SUBMISSIONS (MEG-TEC-V2) ===================== */
+const VERSION = "MEG-TEC-V2 v2026.08.10-10:00";
 const SUPABASE_URL = "https://vzngfswtofegimfcoigx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6bmdmc3d0b2ZlZ2ltZmNvaWd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyODA5MzUsImV4cCI6MjEwMDg1NjkzNX0.47rTrOjzNgxarCBYGapqajLw5v_yATbeKitiyP6a2Sg";
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-const MEG_LOGO_B64 = "data:image/png;base64,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";
-
-function toggleTheme(){
-  const body = document.body;
-  const isDark = body.getAttribute('data-theme') === 'dark';
-  const next = isDark ? 'light' : 'dark';
-  body.setAttribute('data-theme', next);
-  document.getElementById('themeLabel').textContent = isDark ? 'Light' : 'Dark';
-  document.getElementById('toggleThumb').textContent = isDark ? '☀️' : '🌙';
-  localStorage.setItem('meg_forms_theme', next);
+let sb = null;
+try{
+  if(!window.supabase) throw new Error("Supabase SDK failed to load");
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}catch(e){
+  console.error("Failed to initialize Supabase client:", e);
+  document.addEventListener('DOMContentLoaded', showScriptErrorFallback);
+  if(document.readyState !== 'loading') showScriptErrorFallback();
 }
-function applyStoredTheme(){
-  const stored = localStorage.getItem('meg_forms_theme');
-  if(stored === 'light'){
-    document.body.setAttribute('data-theme','light');
-    document.getElementById('themeLabel').textContent = 'Light';
-    document.getElementById('toggleThumb').textContent = '☀️';
-  }
+function showScriptErrorFallback(){
+  document.getElementById('authBoxLogin').style.display = 'none';
+  document.getElementById('authBoxSignup').style.display = 'none';
+  document.getElementById('authBoxPending').style.display = 'none';
+  document.getElementById('authBoxScriptError').style.display = 'block';
+  document.getElementById('authOverlay').style.display = 'flex';
 }
+const FORM_CODE = "tec-v2";
+const EDGE_FN_URL = SUPABASE_URL + "/functions/v1/tec-v2-notify";
+
+let currentUser = null, currentProfile = null, currentPerm = null;
+let onAuthReadyCompleted = false;
 
 function showAuthBox(which){
-  document.getElementById('loginCard').style.display = which==='login' ? 'block':'none';
-  document.getElementById('signupCard').style.display = which==='signup' ? 'block':'none';
-  document.getElementById('forgotCard').style.display = which==='forgot' ? 'block':'none';
+  document.getElementById('authBoxLogin').style.display = which==='login' ? 'block':'none';
+  document.getElementById('authBoxSignup').style.display = which==='signup' ? 'block':'none';
+  document.getElementById('authBoxPending').style.display = which==='pending' ? 'block':'none';
+  document.getElementById('authBoxForgot').style.display = which==='forgot' ? 'block':'none';
+  document.getElementById('authBoxNewPassword').style.display = which==='newpassword' ? 'block':'none';
   document.getElementById('loginError').textContent = '';
   document.getElementById('signupError').textContent = '';
   const fe = document.getElementById('forgotError'); if(fe) fe.textContent = '';
-  const foot = document.getElementById('loginFoot');
-  if(which==='login') foot.innerHTML = 'No account yet? <a onclick="showAuthBox(&#39;signup&#39;)">Sign up</a>';
-  else if(which==='signup') foot.innerHTML = 'Already have an account? <a onclick="showAuthBox(&#39;login&#39;)">Sign in</a>';
-  else foot.innerHTML = '<a onclick="showAuthBox(&#39;login&#39;)">Back to Sign In</a>';
+  const ne = document.getElementById('newPasswordError'); if(ne) ne.textContent = '';
 }
 
+function togglePwVisibility(inputId, btn){
+  const input = document.getElementById(inputId);
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? '👁' : '🙈';
+}
+
+function clearAuthFields(){
+  ['loginEmail','loginPassword','signupName','signupEmail','signupPassword','forgotEmail','newPasswordInput'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.querySelectorAll('.pw-wrap input[type="text"]').forEach(inp=>{ inp.type = 'password'; });
+  document.querySelectorAll('.pw-toggle').forEach(btn=>{ btn.textContent = '👁'; });
+}
+
+async function doForgotPassword(){
+  const email = document.getElementById('forgotEmail').value.trim();
+  const errEl = document.getElementById('forgotError');
+  errEl.textContent = '';
+  if(!email){ errEl.textContent = 'Enter your email.'; return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + window.location.pathname
+  });
+  if(error){ errEl.textContent = error.message; return; }
+  alert('If an account exists for that email, a reset link has been sent. Check your inbox (and spam folder).');
+  showAuthBox('login');
+}
+
+async function doSetNewPassword(){
+  const pw = document.getElementById('newPasswordInput').value;
+  const errEl = document.getElementById('newPasswordError');
+  errEl.textContent = '';
+  if(!pw || pw.length < 6){ errEl.textContent = 'Password must be at least 6 characters.'; return; }
+  const { error } = await sb.auth.updateUser({ password: pw });
+  if(error){ errEl.textContent = error.message; return; }
+  alert('Password updated. Please sign in with your new password.');
+  await sb.auth.signOut();
+  clearAuthFields();
+  showAuthBox('login');
+}
 async function doSignIn(){
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -253,9 +1479,8 @@ async function doSignIn(){
   if(!email || !password){ errEl.textContent = 'Enter email and password.'; return; }
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if(error){ errEl.textContent = error.message; return; }
-  await loadDashboard();
+  await onAuthReady();
 }
-
 async function doSignUp(){
   const name = document.getElementById('signupName').value.trim();
   const email = document.getElementById('signupEmail').value.trim();
@@ -266,123 +1491,675 @@ async function doSignUp(){
   if(password.length < 6){ errEl.textContent = 'Password must be at least 6 characters.'; return; }
   const { error } = await sb.auth.signUp({ email, password, options:{ data:{ full_name:name } } });
   if(error){ errEl.textContent = error.message; return; }
-  await loadDashboard();
+  await onAuthReady();
 }
-
-async function doForgotPassword(){
-  const email = document.getElementById('forgotEmail').value.trim();
-  const errEl = document.getElementById('forgotError');
-  errEl.textContent = '';
-  if(!email){ errEl.textContent = 'Enter your email.'; return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
-  if(error){ errEl.textContent = error.message; return; }
-  alert('If an account exists for that email, a reset link has been sent.');
-  showAuthBox('login');
-}
-
 async function doSignOut(){
   await sb.auth.signOut();
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPassword').value = '';
-  document.getElementById('adminLinkBtn').style.display = 'none';
-  document.getElementById('screen-dashboard').classList.remove('active');
-  document.getElementById('screen-login').classList.add('active');
+  currentUser = null; currentProfile = null; currentPerm = null; onAuthReadyCompleted = false;
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('topUserBar').style.display = 'none';
+  clearAuthFields();
   showAuthBox('login');
 }
 
-function deriveInitials(name){
-  if(!name) return '--';
-  const caps = (name.match(/[A-Z]/g)||[]).join('');
-  if(caps.length>=2) return caps.slice(0,2);
-  return name.split(/\\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
+let cachedTecCourses = null;
+let cachedTecStandards = null;
+async function loadTecLists(){
+  const [coursesResult, standardsResult] = await Promise.all([
+    sb.from('tec_v2_courses').select('*').order('name'),
+    sb.from('tec_v2_standards').select('name').order('sort_order')
+  ]);
+  const courses = coursesResult.data;
+  const standards = standardsResult.data;
+  cachedTecCourses = courses || [];
+  cachedTecStandards = standards || [];
+  pages.forEach(pushListsToPage);
+}
+function pushListsToPage(page){
+  const win = page.iframe.contentWindow;
+  if(!win || !win.TEC_setCourseOptions) return;
+  if(cachedTecCourses) win.TEC_setCourseOptions(cachedTecCourses);
+  if(cachedTecStandards) win.TEC_setStandardOptions(cachedTecStandards);
 }
 
-async function loadDashboard(){
+async function onAuthReady(){
   const { data: { user } } = await sb.auth.getUser();
-  if(!user) return;
+  if(!user){ showAuthBox('login'); return; }
+  currentUser = { id: user.id, email: user.email };
 
   const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  currentProfile = profile;
 
-  document.getElementById('screen-login').classList.remove('active');
-  document.getElementById('screen-dashboard').classList.add('active');
-  document.getElementById('userName').textContent = profile?.full_name || user.email;
-  document.getElementById('userAvatar').textContent = deriveInitials(profile?.full_name || user.email);
+  const { data: perm } = await sb.from('form_permissions').select('*')
+    .eq('user_id', user.id).eq('form_code', FORM_CODE).maybeSingle();
+  currentPerm = perm || null;
 
-  const { data: perms } = await sb.from('form_permissions').select('*').eq('user_id', user.id).eq('can_submit', true);
-  const permMap = {};
-  (perms||[]).forEach(p=>{ permMap[p.form_code] = p; });
-  const formCodes = Object.keys(permMap);
-
-  const isAdminOnAnyForm = (perms||[]).some(p=>p.is_admin);
-  document.getElementById('adminLinkBtn').style.display = isAdminOnAnyForm ? 'inline-flex' : 'none';
-
-  const content = document.getElementById('dashContent');
-  const sub = document.getElementById('dashSub');
-
-  if(formCodes.length === 0){
-    sub.textContent = 'No forms assigned';
-    content.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <div class="empty-title">You haven't been assigned any forms yet</div>
-        <div class="empty-desc">Please contact your admin to request access to the forms you need.</div>
-      </div>`;
+  if(!currentPerm || (!currentPerm.can_submit && !currentPerm.can_approve && !currentPerm.is_admin)){
+    showAuthBox('pending');
     return;
   }
 
-  const { data: registry } = await sb.from('form_registry')
-    .select('*').eq('active', true).in('form_code', formCodes).order('sort_order');
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('topUserBar').style.display = 'flex';
+  document.getElementById('topUserLabel').textContent =
+    `Signed in as ${currentProfile?.full_name || currentUser.email}${currentPerm.is_admin ? ' (Admin)' : (currentPerm.can_approve ? ' (PIC)' : '')}`;
 
-  if(!registry || registry.length === 0){
-    sub.textContent = 'No forms assigned';
-    content.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <div class="empty-title">You haven't been assigned any forms yet</div>
-        <div class="empty-desc">Please contact your admin to request access to the forms you need.</div>
-      </div>`;
-    return;
+  // Supabase's onAuthStateChange fires for more than just the initial sign-in
+  // (token refreshes included) — this block does real, potentially destructive
+  // one-time setup (creating the first page, auto-filling teacher name), so it
+  // must only ever run once per genuine sign-in, not on every re-fire.
+  if(!onAuthReadyCompleted){
+    onAuthReadyCompleted = true;
+    await loadTecLists();
+
+    // A specific submission requested via ?review=<id> — e.g. opened from
+    // the Review list's "View & Print" link in a fresh tab — is a
+    // completely separate flow from a teacher filling out a new form, so
+    // it takes priority over everything below (including the Template
+    // Profile prompt) and is handled right here, inside the one-time
+    // guard, so it can never re-run and stack up duplicate read-only
+    // banners if onAuthStateChange re-fires later (e.g. a token refresh).
+    const reviewId = new URLSearchParams(window.location.search).get('review');
+    if(reviewId){
+      if(currentPerm.can_approve || currentPerm.is_admin){
+        await loadReviewModeSubmission(reviewId);
+      } else {
+        alert("You don't have permission to review submissions.");
+      }
+    } else if(currentPerm.can_submit){
+      // Auto-fill Teacher's Name with the signed-in user's name, still editable —
+      // this is the orchestrator's own shared field now, broadcast to every page.
+      const teacherNameInput = document.getElementById('teacherNameInput');
+      if(currentProfile?.full_name && !teacherNameInput.value){
+        teacherNameInput.value = currentProfile.full_name;
+        pushTeacherNameToAllPages();
+      }
+      // Template Profiles are a convenience for people actually filling out
+      // pages — a pure PIC reviewer without submit permission never needs
+      // this prompt, so they just get the plain single blank page as before.
+      await checkAndPromptTemplates();
+    } else {
+      setPageCount(1); // create the first page now that auth has succeeded
+    }
   }
 
-  sub.textContent = `${registry.length} form${registry.length===1?'':'s'} assigned to your account`;
+  if(currentPerm.can_submit){
+    document.getElementById('submitBtn').style.display = 'inline-block';
+    document.getElementById('loadTemplateBtn').style.display = 'inline-block';
+    document.getElementById('saveTemplateBtn').style.display = 'inline-block';
+  } else {
+    document.getElementById('submitBtn').style.display = 'none';
+    document.getElementById('loadTemplateBtn').style.display = 'none';
+    document.getElementById('saveTemplateBtn').style.display = 'none';
+  }
 
-  content.innerHTML = `<div class="dash-grid">` + registry.map(f=>{
-    const perm = permMap[f.form_code];
-    const badgeText = perm.is_admin ? 'ADMIN ACCESS' : 'SUBMIT ACCESS';
-    const badgeIcon = perm.is_admin ? '🔑' : '✓';
-    const accent = f.accent_color || '#4fd8c4';
-    const previewHtml = f.preview_image
-      ? `<div class="card-preview-pop">
-           <img src="${f.preview_image}" alt="${escapeHtml(f.display_name)} preview">
-           <div class="card-preview-caption">${escapeHtml(f.description || '')}</div>
-         </div>`
-      : '';
-    return `
-      <a class="form-card" href="${f.url}" target="_blank" rel="noopener" style="--card-accent:${accent};--card-icon-bg:${accent}26;--badge-bg:${accent}26;--badge-color:${accent};">
-        ${previewHtml}
-        <div class="card-icon">${f.icon || '📄'}</div>
-        <div class="card-name">${escapeHtml(f.display_name)}</div>
-        <div class="card-desc">${escapeHtml(f.description || '')}</div>
-        <div class="card-badge">${badgeIcon} ${badgeText}</div>
-        <div class="card-arrow">→</div>
-      </a>`;
-  }).join('') + `</div>`;
+  if(currentPerm.is_admin){
+    document.getElementById('btnManageLists').style.display = 'inline-block';
+  }
+
+  if(currentPerm.can_approve || currentPerm.is_admin){
+    document.getElementById('btnPicReview').style.display = 'inline-block';
+    document.getElementById('btnPicReports').style.display = 'inline-block';
+  }
+
+  // PIC-only account with no submit rights of her own — the teacher form
+  // isn't relevant to her, land directly on the Review screen instead.
+  // Skipped when she's here via a ?review=<id> link, since that already
+  // landed her exactly where she meant to be — redirecting past it would
+  // silently discard the specific submission she opened.
+  const isReviewModeUrl = Boolean(new URLSearchParams(window.location.search).get('review'));
+  if(!isReviewModeUrl && !currentPerm.can_submit && (currentPerm.can_approve || currentPerm.is_admin)){
+    showPicReviewScreen();
+  }
 }
 
-function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+async function submitTecForm(){
+  if(pages.length === 0){ alert('Add at least one page before submitting.'); return; }
 
-window.onload = async function(){
-  applyStoredTheme();
-  document.getElementById('logoImg').src = MEG_LOGO_B64;
+  const teacherName = document.getElementById('teacherNameInput').value.trim();
+  if(!teacherName){ alert("Please enter the Teacher's Name before submitting."); return; }
+
+  // Validate every page before touching anything — cheaper to catch a
+  // problem on page 3 now than after page 1 and 2 have already looked fine.
+  const pageData = [];
+  for(let i = 0; i < pages.length; i++){
+    const page = pages[i];
+    const win = page.iframe.contentWindow;
+    if(!win || !win.TEC_getFormData){ alert(`Page ${i + 1} hasn't finished loading yet — please wait a moment and try again.`); return; }
+    const formData = win.TEC_getFormData();
+    const header = formData.header;
+    if(!header.course){ alert(`Please select a Course on Page ${i + 1} before submitting.`); return; }
+    if(!formData.students || formData.students.length === 0){ alert(`Add at least one student on Page ${i + 1} before submitting.`); return; }
+    const standards = win.TEC_getCheckedStandards ? win.TEC_getCheckedStandards() : [];
+    if(standards.length === 0){ alert(`Please select at least one Standard on Page ${i + 1} before submitting.`); return; }
+    pageData.push({ page, formData, header, standards });
+  }
+
+  if(!confirm(`Submit this ${pages.length}-page claim for ${teacherName} to the PIC?`)) return;
+
+  // Compute course-grouped serials/totals and push them into every iframe's
+  // display, exactly as the on-screen Grand Total already does — then reuse
+  // those same computed values for the saved payload, so what's stored
+  // always matches what was shown before submitting.
+  applyGroupingToPages();
+  const { serialByCourse, groupPages } = computeCourseGroups();
+  const monthIndex = m => ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"].indexOf((m||'').toUpperCase()) + 1;
+
+  const pagesPayload = [];
+  Object.entries(groupPages).forEach(([course, groupList]) => {
+    const serial = serialByCourse[course];
+    const groupSubtotals = groupList.map(gp => {
+      const totalEl = getPageDoc(gp)?.getElementById('totalNet');
+      return parseFloat(totalEl?.textContent.replace(/,/g, '')) || 0;
+    });
+    const groupTotal = groupSubtotals.reduce((a, b) => a + b, 0);
+    groupList.forEach((gp, idx) => {
+      const found = pageData.find(pd => pd.page === gp);
+      const { header, standards, formData } = found;
+      pagesPayload.push({
+        course_name: header.course,
+        standards,
+        month: monthIndex(header.month) || (new Date().getMonth() + 1),
+        year: parseInt(header.year, 10) || new Date().getFullYear(),
+        serial_no: serial,
+        students: formData.students,
+        subtotal: groupSubtotals[idx],
+        is_group_total_page: groupList.length > 1 && idx === groupList.length - 1,
+        group_total: groupList.length > 1 && idx === groupList.length - 1 ? groupTotal : null
+      });
+    });
+  });
+
+  const payload = {
+    submitted_by: currentUser.id,
+    teacher_name: teacherName,
+    company_code: document.getElementById('companySelectInput').value,
+    pages: pagesPayload,
+    status: 'submitted'
+  };
+
+  const { data, error } = await sb.from('tec_v2_submissions').insert(payload).select().single();
+  if(error){ alert('Failed to submit: ' + error.message); return; }
+
+  await maybeOfferTemplateUpdate();
+
+  notifyTecEdgeFunction('submitted', data.id);
+  const serials = [...new Set(pagesPayload.map(p => p.serial_no))].join(', ');
+  alert(`Submitted. Serial No(s): ${serials}. The PIC has been notified.`);
+}
+
+
+async function notifyTecEdgeFunction(event, submissionId){
+  try{
+    await fetch(EDGE_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+SUPABASE_ANON_KEY },
+      body: JSON.stringify({ event, submission_id: submissionId })
+    });
+  }catch(e){ console.error('Notify edge function failed (non-fatal):', e); }
+}
+
+async function loadPreviousMonthTemplate(){
+  const courseName = document.getElementById('course').value;
+  if(!courseName){ alert('Select a Course first, then load its previous roster.'); return; }
+  const { data, error } = await sb.from('tec_v2_submissions')
+    .select('students, standards')
+    .eq('submitted_by', currentUser.id)
+    .eq('course_name', courseName)
+    .order('submitted_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if(error){ alert('Failed to load previous template: ' + error.message); return; }
+  if(!data){ alert(`No previous submission found for ${courseName} yet.`); return; }
+  if(!confirm(`Load the student roster (names + fees) from your last ${courseName} submission? Dates will stay blank for the new month.`)) return;
+  window.TEC_applyStudentsTemplate(data.students);
+  if(Array.isArray(data.standards)){
+    document.querySelectorAll('#standardCheckboxes input').forEach(cb=>{
+      cb.checked = data.standards.includes(cb.value);
+    });
+  }
+}
+
+document.getElementById('submitBtn').addEventListener('click', submitTecForm);
+document.getElementById('btnManageLists').addEventListener('click', openManageModal);
+
+/* ---------- Manage Lists (admin only): Courses, Standards, Users ---------- */
+function escapeHtmlTec(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+let currentManageTab = 'courses';
+function openManageModal(){
+  document.getElementById('manageListsModal').style.display = 'flex';
+  showManageTab('courses');
+}
+function closeManageModal(){
+  document.getElementById('manageListsModal').style.display = 'none';
+}
+function showManageTab(tab){
+  currentManageTab = tab;
+  document.querySelectorAll('.manage-tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['courses','standards','users'][i] === tab);
+  });
+  if(tab === 'courses') renderCoursesTab();
+  else if(tab === 'standards') renderStandardsTab();
+  else if(tab === 'users') renderUsersTab();
+}
+
+async function renderCoursesTab(){
+  const cont = document.getElementById('manageListContent');
+  cont.innerHTML = '<div class="manage-empty">Loading...</div>';
+  const { data, error } = await sb.from('tec_v2_courses').select('*').order('name');
+  if(error){ cont.innerHTML = '<div class="manage-empty">Failed to load courses.</div>'; return; }
+  cont.innerHTML = `
+    <div class="manage-add-row">
+      <input type="text" id="newCourseName" placeholder="Course name (e.g. Bahasa Melayu)">
+      <input type="text" id="newCourseCode" placeholder="Serial code (e.g. BM)" maxlength="10" style="max-width:120px;">
+      <button onclick="addTecCourse()">+ Add</button>
+    </div>
+    <div class="manage-empty" style="padding:4px 10px 10px;">Serial code is used directly in the claim's serial number — keep it short. Courses sharing the same code will share one serial when submitted together.</div>
+    <div id="manageListItems"></div>`;
+  const itemsEl = document.getElementById('manageListItems');
+  itemsEl.innerHTML = (data && data.length)
+    ? data.map(c => `
+      <div class="manage-list-item">
+        <span>${escapeHtmlTec(c.name)} <span style="color:var(--muted);font-weight:700;">(${escapeHtmlTec(c.code || '—')})</span></span>
+        <span style="display:flex;gap:2px;">
+          <button class="manage-edit-btn" title="Edit serial code" onclick="editTecCourseCode('${c.id}', ${escapeHtmlTec(JSON.stringify(c.code || ''))})">✏️</button>
+          <button class="manage-delete-btn" onclick="deleteTecCourse('${c.id}')">✕</button>
+        </span>
+      </div>`).join('')
+    : '<div class="manage-empty">No courses yet.</div>';
+}
+async function addTecCourse(){
+  const nameInput = document.getElementById('newCourseName');
+  const codeInput = document.getElementById('newCourseCode');
+  const name = nameInput.value.trim();
+  const code = codeInput.value.trim().toUpperCase();
+  if(!name){ alert('Enter a course name.'); return; }
+  if(!code){ alert('Enter a short serial code for this course (e.g. BM).'); return; }
+  const { error } = await sb.from('tec_v2_courses').insert({ name, code, created_by: currentUser.id });
+  if(error){ alert('Failed to add course: ' + error.message); return; }
+  nameInput.value = ''; codeInput.value = '';
+  await renderCoursesTab();
+  await loadTecLists();
+}
+async function editTecCourseCode(id, currentCode){
+  const entered = prompt('Serial code for this course:', currentCode);
+  if(entered === null) return; // cancelled
+  const code = entered.trim().toUpperCase();
+  if(!code){ alert('Serial code cannot be empty.'); return; }
+  const { error } = await sb.from('tec_v2_courses').update({ code }).eq('id', id);
+  if(error){ alert('Failed to update code: ' + error.message); return; }
+  await renderCoursesTab();
+  await loadTecLists();
+}
+async function deleteTecCourse(id){
+  if(!confirm('Remove this course from the list?')) return;
+  const { error } = await sb.from('tec_v2_courses').delete().eq('id', id);
+  if(error){ alert('Failed to remove course: ' + error.message); return; }
+  await renderCoursesTab();
+  await loadTecLists();
+}
+
+async function renderStandardsTab(){
+  const cont = document.getElementById('manageListContent');
+  cont.innerHTML = '<div class="manage-empty">Loading...</div>';
+  const { data, error } = await sb.from('tec_v2_standards').select('*').order('sort_order');
+  if(error){ cont.innerHTML = '<div class="manage-empty">Failed to load standards.</div>'; return; }
+  cont.innerHTML = `
+    <div class="manage-add-row">
+      <input type="text" id="newStandardName" placeholder="New standard (e.g. P1)">
+      <button onclick="addTecStandard()">+ Add</button>
+    </div>
+    <div id="manageListItems"></div>`;
+  const itemsEl = document.getElementById('manageListItems');
+  itemsEl.innerHTML = (data && data.length)
+    ? data.map(s => `<div class="manage-list-item"><span>${escapeHtmlTec(s.name)}</span><button class="manage-delete-btn" onclick="deleteTecStandard('${s.id}')">✕</button></div>`).join('')
+    : '<div class="manage-empty">No standards yet.</div>';
+  window.__lastStandardsCount = (data || []).length;
+}
+async function addTecStandard(){
+  const input = document.getElementById('newStandardName');
+  const name = input.value.trim();
+  if(!name) return;
+  const { error } = await sb.from('tec_v2_standards').insert({ name, sort_order: window.__lastStandardsCount || 0, created_by: currentUser.id });
+  if(error){ alert('Failed to add standard: ' + error.message); return; }
+  input.value = '';
+  await renderStandardsTab();
+  await loadTecLists();
+}
+async function deleteTecStandard(id){
+  if(!confirm('Remove this standard from the list?')) return;
+  const { error } = await sb.from('tec_v2_standards').delete().eq('id', id);
+  if(error){ alert('Failed to remove standard: ' + error.message); return; }
+  await renderStandardsTab();
+  await loadTecLists();
+}
+
+async function renderUsersTab(){
+  const cont = document.getElementById('manageListContent');
+  cont.innerHTML = '<div class="manage-empty">Loading users...</div>';
+  const { data: profiles } = await sb.from('profiles').select('*').order('full_name');
+  const { data: perms } = await sb.from('form_permissions').select('*').eq('form_code', FORM_CODE);
+  const permMap = {};
+  (perms||[]).forEach(p=>{ permMap[p.user_id] = p; });
+  if(!profiles || profiles.length===0){ cont.innerHTML = '<div class="manage-empty">No users found.</div>'; return; }
+  cont.innerHTML = profiles.map(p=>{
+    const perm = permMap[p.id] || { can_submit:false, can_approve:false, is_admin:false };
+    return `
+      <div class="manage-list-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
+        <div style="font-weight:600;">${escapeHtmlTec(p.full_name)} <span style="color:#888;font-weight:400;">(${escapeHtmlTec(p.status)})</span></div>
+        <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+          <label><input type="checkbox" ${perm.can_submit?'checked':''} onchange="updateTecUserPermission('${p.id}','can_submit',this.checked)"> Teacher (Can Submit)</label>
+          <label><input type="checkbox" ${perm.can_approve?'checked':''} onchange="updateTecUserPermission('${p.id}','can_approve',this.checked)"> PIC (Can Review)</label>
+          <label><input type="checkbox" ${perm.is_admin?'checked':''} onchange="updateTecUserPermission('${p.id}','is_admin',this.checked)"> Admin</label>
+        </div>
+      </div>`;
+  }).join('');
+}
+async function updateTecUserPermission(userId, field, value){
+  try{
+    const { data: existing } = await sb.from('form_permissions').select('*')
+      .eq('user_id', userId).eq('form_code', FORM_CODE).maybeSingle();
+    if(existing){
+      await sb.from('form_permissions').update({ [field]: value }).eq('id', existing.id);
+    } else {
+      await sb.from('form_permissions').insert({
+        user_id: userId, form_code: FORM_CODE,
+        can_submit: field==='can_submit'?value:false,
+        can_approve: field==='can_approve'?value:false,
+        is_admin: field==='is_admin'?value:false
+      });
+    }
+    if(value){
+      await sb.from('profiles').update({ status:'active' }).eq('id', userId).eq('status','pending');
+    }
+    await renderUsersTab();
+  }catch(e){
+    console.error('Failed to update permission', e);
+    alert('Failed to update permission: ' + e.message);
+  }
+}
+
+const TEC_MONTHS = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+
+/* ---------- PIC Review screen ---------- */
+function showPicReviewScreen(){
+  document.getElementById('mainFormArea').style.display = 'none';
+  document.getElementById('picReportsScreen').style.display = 'none';
+  document.getElementById('picReviewScreen').style.display = 'block';
+  renderPicReviewList();
+}
+function showMainFormArea(){
+  document.getElementById('picReviewScreen').style.display = 'none';
+  document.getElementById('picReportsScreen').style.display = 'none';
+  document.getElementById('mainFormArea').style.display = 'block';
+}
+function showPicReportsScreen(){
+  document.getElementById('mainFormArea').style.display = 'none';
+  document.getElementById('picReviewScreen').style.display = 'none';
+  document.getElementById('picReportsScreen').style.display = 'block';
+  populateReportFilterOptions();
+}
+
+async function renderPicReviewList(){
+  const listEl = document.getElementById('picReviewList');
+  listEl.innerHTML = '<div class="manage-empty">Loading...</div>';
+  const status = document.getElementById('reviewStatusFilter').value;
+  let query = sb.from('tec_v2_submissions')
+    .select('id, teacher_name, company_code, pages, status, submitted_at, done_at');
+  if(status) query = query.eq('status', status);
+  query = query.order('submitted_at', { ascending: false });
+  const { data, error } = await query;
+  if(error){ listEl.innerHTML = '<div class="manage-empty">Failed to load submissions.</div>'; console.error(error); return; }
+  if(!data || data.length === 0){ listEl.innerHTML = '<div class="manage-empty">No submissions match this filter.</div>'; return; }
+
+  listEl.innerHTML = data.map(sub=>{
+    const pgs = sub.pages || [];
+    const courseNames = [...new Set(pgs.map(p => p.course_name))];
+    const serials = [...new Set(pgs.map(p => p.serial_no))];
+    const studentCount = pgs.reduce((sum, p) => sum + (p.students || []).length, 0);
+    const netTotal = pgs.reduce((sum, p) => sum + (Number(p.subtotal) || 0), 0);
+    const monthYearSet = [...new Set(pgs.map(p => `${TEC_MONTHS[(p.month||1)-1] || ''} ${p.year||''}`))];
+    const doneAction = sub.status === 'submitted'
+      ? `<button class="done-btn" onclick="markTecSubmissionDone('${sub.id}')">✔ Mark as Done</button>`
+      : `<span style="color:#2e8b57;font-weight:600;">✔ Done</span>`;
+    return `
+      <div class="pic-row">
+        <div class="pic-row-info">
+          <div class="name">${escapeHtmlTec(sub.teacher_name)} — ${escapeHtmlTec(courseNames.join(', '))} (${pgs.length} page${pgs.length===1?'':'s'})</div>
+          <div class="meta">${escapeHtmlTec(monthYearSet.join(' · '))} · ${studentCount} student${studentCount===1?'':'s'} · Total: RM ${netTotal.toFixed(2)} · Serial: ${escapeHtmlTec(serials.join(', '))}</div>
+        </div>
+        <div class="pic-row-actions">
+          <a href="?review=${sub.id}" target="_blank" rel="noopener">🖨️ View &amp; Print</a>
+          ${doneAction}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function markTecSubmissionDone(id){
+  if(!confirm('Mark this submission as Done?')) return;
+  const { error } = await sb.from('tec_v2_submissions').update({
+    status: 'done',
+    done_by: currentUser.id,
+    done_by_name: currentProfile?.full_name || currentUser.email,
+    done_at: new Date().toISOString()
+  }).eq('id', id);
+  if(error){ alert('Failed to mark as done: ' + error.message); return; }
+  await renderPicReviewList();
+}
+
+/* ---------- PIC Reports screen ---------- */
+async function populateReportFilterOptions(){
+  const courseSel = document.getElementById('reportCourseFilter');
+  const standardSel = document.getElementById('reportStandardFilter');
+  const monthSel = document.getElementById('reportMonthFilter');
+  if(monthSel.options.length <= 1){
+    TEC_MONTHS.forEach((name, idx)=>{
+      const o = document.createElement('option');
+      o.value = String(idx+1);
+      o.textContent = name;
+      monthSel.appendChild(o);
+    });
+  }
+  if(courseSel.options.length <= 1){
+    const { data: courses } = await sb.from('tec_v2_courses').select('name').order('name');
+    (courses||[]).forEach(c=>{
+      const o = document.createElement('option'); o.value = c.name; o.textContent = c.name;
+      courseSel.appendChild(o);
+    });
+  }
+  if(standardSel.options.length <= 1){
+    const { data: standards } = await sb.from('tec_v2_standards').select('name').order('sort_order');
+    (standards||[]).forEach(s=>{
+      const o = document.createElement('option'); o.value = s.name; o.textContent = s.name;
+      standardSel.appendChild(o);
+    });
+  }
+}
+
+async function runTecReport(){
+  const summaryEl = document.getElementById('reportSummary');
+  const listEl = document.getElementById('reportList');
+  summaryEl.innerHTML = '';
+  listEl.innerHTML = '<div class="manage-empty">Running report...</div>';
+
+  const teacher = document.getElementById('reportTeacherFilter').value.trim();
+  const course = document.getElementById('reportCourseFilter').value;
+  const standard = document.getElementById('reportStandardFilter').value;
+  const month = document.getElementById('reportMonthFilter').value;
+  const year = document.getElementById('reportYearFilter').value;
+
+  // teacher_name is the only real top-level column left to filter server-side —
+  // course/standard/month/year now live per-page inside the pages array, so
+  // those are matched client-side against each page individually below.
+  let query = sb.from('tec_v2_submissions').select('id, teacher_name, pages, status');
+  if(teacher) query = query.ilike('teacher_name', `%${teacher}%`);
+  query = query.order('id', { ascending: false });
+
+  const { data, error } = await query;
+  if(error){ listEl.innerHTML = '<div class="manage-empty">Report failed.</div>'; console.error(error); return; }
+
+  const pageMatches = (p) => {
+    if(course && p.course_name !== course) return false;
+    if(standard && !(p.standards || []).includes(standard)) return false;
+    if(month && p.month !== parseInt(month, 10)) return false;
+    if(year && p.year !== parseInt(year, 10)) return false;
+    return true;
+  };
+
+  // Only the pages that actually match go into totals — a submission with
+  // some matching and some non-matching pages still appears (it's one
+  // indivisible record for View & Print), but the report's numbers only
+  // reflect what was actually asked for.
+  const results = (data || [])
+    .map(sub => ({ ...sub, matchingPages: (sub.pages || []).filter(pageMatches) }))
+    .filter(sub => sub.matchingPages.length > 0);
+
+  if(results.length === 0){ listEl.innerHTML = '<div class="manage-empty">No submissions match these filters.</div>'; return; }
+
+  let totalStudents = 0, totalNet = 0, totalVenue = 0;
+  results.forEach(sub => {
+    sub.matchingPages.forEach(p => {
+      (p.students || []).forEach(s => {
+        totalStudents += 1;
+        totalNet += Number(s.netPay) || 0;
+        totalVenue += Number(s.venueFee) || 0;
+      });
+    });
+  });
+
+  summaryEl.innerHTML = `
+    <div class="report-summary-card">
+      <div>Submissions<b>${results.length}</b></div>
+      <div>Total Students<b>${totalStudents}</b></div>
+      <div>Net Pay Total<b>RM ${totalNet.toFixed(2)}</b></div>
+      <div>Venue Fee Total<b>RM ${totalVenue.toFixed(2)}</b></div>
+    </div>`;
+
+  listEl.innerHTML = results.map(sub=>{
+    const courseNames = [...new Set(sub.matchingPages.map(p => p.course_name))];
+    const serials = [...new Set(sub.matchingPages.map(p => p.serial_no))];
+    const monthYearSet = [...new Set(sub.matchingPages.map(p => `${TEC_MONTHS[(p.month||1)-1] || ''} ${p.year||''}`))];
+    const studentCount = sub.matchingPages.reduce((sum, p) => sum + (p.students || []).length, 0);
+    const netTotal = sub.matchingPages.reduce((sum, p) => sum + (Number(p.subtotal) || 0), 0);
+    return `
+      <div class="pic-row">
+        <div class="pic-row-info">
+          <div class="name">${escapeHtmlTec(sub.teacher_name)} — ${escapeHtmlTec(courseNames.join(', '))}</div>
+          <div class="meta">${escapeHtmlTec(monthYearSet.join(' · '))} · ${studentCount} students · Net Pay: RM ${netTotal.toFixed(2)} · Serial: ${escapeHtmlTec(serials.join(', '))} · ${escapeHtmlTec(sub.status)}</div>
+        </div>
+        <div class="pic-row-actions"><a href="?review=${sub.id}" target="_blank" rel="noopener">🖨️ View</a></div>
+      </div>`;
+  }).join('');
+}
+function clearTecReportFilters(){
+  document.getElementById('reportTeacherFilter').value = '';
+  document.getElementById('reportCourseFilter').value = '';
+  document.getElementById('reportStandardFilter').value = '';
+  document.getElementById('reportMonthFilter').value = '';
+  document.getElementById('reportYearFilter').value = '';
+  document.getElementById('reportSummary').innerHTML = '';
+  document.getElementById('reportList').innerHTML = '';
+}
+
+/* ---------- Read-only "review a specific submission" tab (opened via ?review=<id>) ---------- */
+async function loadReviewModeSubmission(id){
+  const { data, error } = await sb.from('tec_v2_submissions').select('*').eq('id', id).maybeSingle();
+  if(error || !data){ alert('Could not load this submission.'); return; }
+
+  document.getElementById('teacherNameInput').value = data.teacher_name || '';
+  document.getElementById('companySelectInput').value = data.company_code || 'MEG';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('pageCountInput').disabled = true;
+
+  const savedPages = data.pages || [];
+  setPageCount(Math.max(1, savedPages.length));
+
+  // Wait for every page's iframe to finish loading before applying data —
+  // createPage()'s own 'load' listener already pushes teacher/company/lists,
+  // this waits for that to be safely done before layering the saved page
+  // data on top, rather than racing it.
+  await Promise.all(pages.map(p => p.loaded ? Promise.resolve() : new Promise(resolve => {
+    p.iframe.addEventListener('load', resolve, { once: true });
+  })));
+
+  pages.forEach((page, i) => {
+    const saved = savedPages[i];
+    if(!saved) return;
+    const win = page.iframe.contentWindow;
+    if(!win || !win.TEC_applyFullSubmission) return;
+    win.TEC_applyFullSubmission({
+      teacher_name: data.teacher_name,
+      company_code: data.company_code,
+      course_name: saved.course_name,
+      year: saved.year,
+      month: saved.month,
+      serial_no: saved.serial_no,
+      students: saved.students
+    });
+    const doc = getPageDoc(page);
+    if(doc){
+      doc.querySelectorAll('#standardCheckboxes input').forEach(cb => {
+        cb.checked = (saved.standards || []).includes(cb.value);
+      });
+      // Restore the EXACT saved grand-total display rather than recomputing —
+      // review mode shows what was actually submitted, not a fresh calculation.
+      if(saved.is_group_total_page && saved.group_total != null){
+        const section = doc.getElementById('courseGroupGrandTotal');
+        if(section){
+          doc.getElementById('grandTotalCourseName').textContent = saved.course_name;
+          const groupSize = savedPages.filter(p => p.serial_no === saved.serial_no).length;
+          doc.getElementById('grandTotalPageCount').textContent = groupSize;
+          doc.getElementById('grandTotalValue').textContent = Number(saved.group_total).toFixed(2);
+          section.style.display = 'flex';
+        }
+      }
+    }
+    updatePageTabBadge(page);
+  });
+
+  const banner = document.createElement('div');
+  banner.className = 'no-print';
+  banner.style.cssText = 'background:#fff8e1;border:1px solid #e6d28a;border-radius:8px;padding:10px 14px;margin:0 0 12px;font-size:13px;';
+  banner.textContent = `Reviewing ${data.teacher_name}'s submission (read-only) — use Print / PDF above to print for finance.`;
+  document.getElementById('pagesContainer').before(banner);
+}
+
+document.getElementById('btnPicReview').addEventListener('click', showPicReviewScreen);
+document.getElementById('btnPicReports').addEventListener('click', showPicReportsScreen);
+document.getElementById('btnBackToForm').addEventListener('click', showMainFormArea);
+document.getElementById('btnBackToFormFromReports').addEventListener('click', showMainFormArea);
+document.getElementById('btnRefreshReview').addEventListener('click', renderPicReviewList);
+document.getElementById('reviewStatusFilter').addEventListener('change', renderPicReviewList);
+document.getElementById('btnRunReport').addEventListener('click', runTecReport);
+document.getElementById('btnClearReport').addEventListener('click', clearTecReportFilters);
+
+window.addEventListener('load', async ()=>{
+  document.title = VERSION;
+  document.getElementById('toolbarVersion').textContent = VERSION;
+  document.getElementById('versionPreview').textContent = VERSION;
+  document.getElementById('loginVersionStamp').textContent = VERSION;
+
+  if(!sb){ showScriptErrorFallback(); return; }
   sb.auth.onAuthStateChange((event, session)=>{
     if(event === 'PASSWORD_RECOVERY'){
-      alert('Please set a new password by visiting your form of choice and using the password reset flow there, or contact your admin.');
+      document.getElementById('authOverlay').style.display = 'flex';
+      document.getElementById('topUserBar').style.display = 'none';
+      showAuthBox('newpassword');
       return;
     }
+    if(session) onAuthReady();
   });
   const { data: { session } } = await sb.auth.getSession();
-  if(session) await loadDashboard();
-};
+  if(session) await onAuthReady();
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(e => console.error('SW registration failed:', e));
+  });
+}
 </script>
 </body>
 </html>
