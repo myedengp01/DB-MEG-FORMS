@@ -280,7 +280,7 @@ async function doSignUp(){
   errEl.textContent = '';
   if(!name || !email || !password){ errEl.textContent = 'Fill in all fields.'; return; }
   if(password.length < 6){ errEl.textContent = 'Password must be at least 6 characters.'; return; }
-  const { error } = await sb.auth.signUp({ email, password, options:{ data:{ full_name:name } } });
+  const { error } = await sb.auth.signUp({ email, password, options:{ data:{ full_name:name }, emailRedirectTo: window.location.origin + window.location.pathname } });
   if(error){ errEl.textContent = error.message; return; }
   await loadDashboard();
 }
