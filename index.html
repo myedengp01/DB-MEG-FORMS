@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DB-MEG-FORMS v2026.09.14-12:00 — Step 2 OTCF Payment</title>
+<style>
+:root{--navy:#173f75;--green:#0b8a62;--bg:#eef3fa;--line:#d8e1ec;--red:#b42318;--amber:#9a6700}
+*{box-sizing:border-box}body{font-family:Segoe UI,Arial,sans-serif;background:var(--bg);padding:28px;color:#14233f}
+.wrap{max-width:920px;margin:auto;background:#fff;border-radius:18px;padding:28px;box-shadow:0 12px 38px rgba(20,50,90,.12)}
+h1{color:var(--navy);margin:0 0 8px}p{line-height:1.55}
+.note{background:#edf9f4;border:1px solid #a7dfc8;color:#116149;padding:12px 14px;border-radius:10px}
+.warn{background:#fff8e8;border:1px solid #efd184;color:#6d5100;padding:12px 14px;border-radius:10px;margin-top:12px}
+button{margin-top:18px;background:var(--navy);color:white;border:0;border-radius:9px;padding:12px 18px;font-weight:800;cursor:pointer}
+button:disabled{opacity:.5}
+#status{margin-top:18px;padding:12px;border-radius:8px;background:#0d1728;color:#dce8ff;white-space:pre-wrap;font:12px/1.5 Consolas,monospace}
+a{color:var(--navy);font-weight:700}
+code{background:#eef2f7;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>DB-MEG-FORMS v2026.09.14-12:00 — Step 2</h1>
+<p><b>Scope:</b> add a direct <b>💰 Mark Payment Done</b> action for eligible OTCF Pending Payment claims in the existing Action Center.</p>
+
+<div class="note">
+This build fetches the CURRENT stable <b>DB-MEG-FORMS/main/index.html</b> and adds one isolated Dashboard addon.
+It uses the already-working <code>meg_forms_set_payment_done</code> backend RPC and the existing <code>can_mark_paid</code> permission.
+</div>
+
+<div class="warn">
+<b>No Supabase SQL is required.</b><br>
+Step 1 OTCF blank-zero remains untouched in MEG-OTCF. This Step 2 file updates <b>DB-MEG-FORMS only</b>.
+</div>
+
+<button id="buildBtn" onclick="build()">Build Dashboard Step 2</button>
+<div id="status">Ready.</div>
+</div>
+
+<script>
+const RAW='https://raw.githubusercontent.com/myedengp01/DB-MEG-FORMS/main/index.html';
+const ADDON_ID='meg-step2-otcf-payment-done';
+const ADDON='\n(function(){\n  \'use strict\';\n\n  const FORM_CODE = \'otcf\';\n\n  async function markPaymentDone(row){\n    if(!row) return;\n\n    if(!row.can_mark_paid){\n      alert(\'Only Admin / Finance users with payment authority may mark Payment Done.\');\n      return;\n    }\n\n    if(String(row.payment_status || \'\').toLowerCase() === \'done\'){\n      alert(\'This overtime claim is already marked Payment Done.\');\n      return;\n    }\n\n    const who = row.claimant_name || \'this claimant\';\n    const serial = row.serial_no || row.submission_id || \'\';\n    const msg =\n      \'Confirm official payment is DONE for this Overtime Claim?\\n\\n\' +\n      who + (serial ? \'\\n\' + serial : \'\') +\n      \'\\n\\nThis updates the finance/payment status.\';\n\n    if(!confirm(msg)) return;\n\n    const { error } = await sb.rpc(\'meg_forms_set_payment_done\', {\n      p_form_code: FORM_CODE,\n      p_submission_id: String(row.submission_id),\n      p_done: true\n    });\n\n    if(error){\n      alert(\'Failed to mark Payment Done: \' + error.message);\n      return;\n    }\n\n    alert(\'Payment marked Done successfully.\');\n    location.reload();\n  }\n\n  function isEligible(row){\n    if(!row) return false;\n    if(String(row.form_code || \'\').toLowerCase() !== FORM_CODE) return false;\n    if(!row.can_mark_paid) return false;\n    if(String(row.payment_status || \'\').toLowerCase() === \'done\') return false;\n\n    const display = String(row.display_status || \'\').toLowerCase();\n    const action = String(row.action_label || \'\').toLowerCase();\n\n    // This Step-2 button is intentionally limited to finance-ready OTCF claims.\n    return display === \'pending payment\'\n      || action.includes(\'ready to process\')\n      || action.includes(\'pending payment\');\n  }\n\n  function enhanceDrawer(){\n    const list = document.getElementById(\'v1145List\');\n    const rows = window.__MEG_V1145_RENDERED_ROWS__;\n    if(!list || !Array.isArray(rows)) return;\n\n    const items = [...list.querySelectorAll(\'.v1145-item\')];\n\n    items.forEach((item, index)=>{\n      const row = rows[index];\n      if(!isEligible(row)) return;\n\n      const actions = item.querySelector(\'.v1145-actions\');\n      if(!actions) return;\n\n      const key = String(row.submission_id || index);\n      if(actions.querySelector(\'[data-step2-payment="\'+key+\'"]\')) return;\n\n      const btn = document.createElement(\'button\');\n      btn.className = \'v1145-btn primary\';\n      btn.dataset.step2Payment = key;\n      btn.textContent = \'💰 Mark Payment Done\';\n      btn.title = \'Admin / Finance only\';\n      btn.addEventListener(\'click\', function(ev){\n        ev.preventDefault();\n        ev.stopPropagation();\n        markPaymentDone(row);\n      });\n\n      actions.appendChild(btn);\n    });\n  }\n\n  // The existing Dashboard owns the feed and permissions.\n  // Step 2 only adds the finance action after the stable drawer renderer finishes.\n  const observer = new MutationObserver(()=>{\n    queueMicrotask(enhanceDrawer);\n  });\n\n  observer.observe(document.body, {\n    childList: true,\n    subtree: true\n  });\n\n  setTimeout(enhanceDrawer, 300);\n\n  console.info(\'MEG-FORMS Step 2 OTCF Payment Done addon active\');\n})();\n';
+
+function log(s){document.getElementById('status').textContent += '\n'+s;}
+
+function removeOldAddon(src){
+  const re=new RegExp('\\n?<script\\s+id=["\\\']'+ADDON_ID+'["\\\'][^>]*>[\\s\\S]*?<\\/script>\\n?','gi');
+  return src.replace(re,'\n');
+}
+
+function inject(src){
+  src=removeOldAddon(src);
+
+  // Same official UVN for this staged release.
+  src=src.replace(/DB-MEG-FORMS\s+v\d{4}\.\d{2}\.\d{2}-\d{2}:\d{2}/g,'DB-MEG-FORMS v2026.09.14-12:00');
+
+  const pos=src.toLowerCase().lastIndexOf('</body>');
+  if(pos<0) throw new Error('Final </body> not found.');
+  const close='</scr'+'ipt>';
+  return src.slice(0,pos)+'\n<script id="'+ADDON_ID+'">\n'+ADDON+'\n'+close+'\n'+src.slice(pos);
+}
+
+function qa(out){
+  const doc=new DOMParser().parseFromString(out,'text/html');
+  const addon=doc.getElementById(ADDON_ID);
+  if(!addon) throw new Error('Step 2 addon was not inserted.');
+
+  try{ new Function(addon.textContent); }
+  catch(e){ throw new Error('Step 2 JavaScript syntax error: '+e.message); }
+
+  if(!out.includes('meg_forms_v1145_feed'))
+    throw new Error('Stable v11:45 Action Center feed was not found. STOP.');
+
+  if(out.includes('meg_forms_v1030_feed'))
+    throw new Error('Unstable v10:30 Action Center feed detected. STOP.');
+
+  if(!out.includes('meg_forms_set_payment_done'))
+    throw new Error('Existing Payment Done backend hook was not found.');
+
+  if(!out.includes('DB-MEG-FORMS v2026.09.14-12:00'))
+    throw new Error('Official UVN was not applied.');
+}
+
+async function build(){
+  const btn=document.getElementById('buildBtn');
+  btn.disabled=true;
+  document.getElementById('status').textContent='Fetching current stable DB-MEG-FORMS index.html...';
+
+  try{
+    const r=await fetch(RAW+'?cb='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('GitHub fetch failed: HTTP '+r.status);
+
+    const src=await r.text();
+    log('Fetched '+src.length.toLocaleString()+' characters.');
+
+    const out=inject(src);
+    qa(out);
+
+    const blob=new Blob([out],{type:'text/html;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='DB-MEG-FORMS_v2026.09.14-12-00_STEP2.html';
+    a.textContent='Download DB-MEG-FORMS Step 2';
+    a.style.display='block';
+    a.style.marginTop='14px';
+    document.querySelector('.wrap').appendChild(a);
+    a.click();
+
+    log('PASS — stable v11:45 feed preserved.');
+    log('PASS — Step 2 OTCF Payment Done action injected.');
+    log('Rename the downloaded file to index.html and replace ONLY DB-MEG-FORMS/index.html.');
+  }catch(e){
+    console.error(e);
+    log('FAIL — '+e.message);
+  }finally{
+    btn.disabled=false;
+  }
+}
+</script>
+</body>
+</html>
