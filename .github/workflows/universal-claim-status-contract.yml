@@ -18,5 +18,7 @@ jobs:
           node-version: '22'
       - name: Contract-test six-form read-only canonical status adapter
         run: node tests/universal-claim-status.contract.test.cjs
+      - name: Contract-test Action Center canonical status badges
+        run: node tests/universal-dashboard-status-view.contract.test.cjs
       - name: Check whitespace
         run: git diff --check
