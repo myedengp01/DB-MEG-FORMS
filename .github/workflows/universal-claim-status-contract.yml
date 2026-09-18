@@ -1,0 +1,22 @@
+name: Dashboard universal claim status contract
+on:
+  push:
+    branches:
+      - feature/universal-claims-v2026-09-17-1430
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dashboard-status-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contract-test six-form read-only canonical status adapter
+        run: node tests/universal-claim-status.contract.test.cjs
+      - name: Check whitespace
+        run: git diff --check
