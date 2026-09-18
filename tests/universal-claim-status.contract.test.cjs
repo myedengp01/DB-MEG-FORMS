@@ -17,11 +17,12 @@ const client = {rpc: async (name,args) => {
   return {data:args.p_submission_ids.map(id=>({form_code:args.p_form_code,submission_id:id,display_status:'Claim Paid',payment_status:'done',claim_paid:true,can_mark_paid:false})),error:null};
 }};
 (async()=>{
-  assert.throws(()=>root.MEGCreateUniversalClaimStatus({}),TypeError);
+  // Error objects created inside node:vm have distinct prototypes.
+  assert.throws(()=>root.MEGCreateUniversalClaimStatus({}),{name:'TypeError',message:/Supabase client/});
   const adapter=root.MEGCreateUniversalClaimStatus(client);
   assert.equal(adapter.uvn,'v2026.09.17-14:30');
   assert.equal((await adapter.read('SCF','s1')).claimPaid,true);
-  await assert.rejects(adapter.read('invalid','s1'),TypeError);
+  await assert.rejects(adapter.read('invalid','s1'),{name:'TypeError',message:/Invalid form code/});
   assert.deepEqual(JSON.parse(JSON.stringify(await adapter.reconcile([]))),[]);
   const input=FORMS.map(code=>({form_code:code,submission_id:code+'1',payment_confirmed:false,tag:code}));
   input.push({form_code:'otcf',submission_id:'o1',payment_confirmed:true});
@@ -44,7 +45,7 @@ const client = {rpc: async (name,args) => {
   const big=await adapter.reconcile(large);
   assert.equal(big.length,201);
   assert.equal(big.every(r=>r.canonicalStatusAvailable),true);
-  assert.deepEqual(calls.slice(before).map(c=>c.args.p_submission_ids.length),[100,100,1]);
+  assert.deepEqual(Array.from(calls.slice(before),c=>c.args.p_submission_ids.length),[100,100,1]);
   assert.equal(calls.every(c=>c.name!=='meg_forms_set_payment_done' && c.name!=='meg_forms_admin_delete_claim'),true);
   console.log('PASS dashboard canonical status: six forms, 100-ID chunks, dedup, mixed statuses, fail-closed, read-only');
 })().catch(e=>{console.error(e);process.exitCode=1;});
