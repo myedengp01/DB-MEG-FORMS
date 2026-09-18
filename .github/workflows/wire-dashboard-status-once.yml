@@ -1,0 +1,40 @@
+name: Wire Dashboard canonical badges (feature branch only)
+on:
+  push:
+    branches:
+      - feature/universal-claims-v2026-09-17-1430
+    paths:
+      - scripts/wire-dashboard-status-once.cjs
+permissions:
+  contents: write
+concurrency:
+  group: meg-dashboard-canonical-status-wiring
+  cancel-in-progress: false
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: SHA-guarded exact index patch on feature branch only
+        run: node scripts/wire-dashboard-status-once.cjs
+      - name: Run both read-only contracts and verify patch
+        run: |
+          node tests/universal-claim-status.contract.test.cjs
+          node tests/universal-dashboard-status-view.contract.test.cjs
+          grep -F '<script src="./src/universal-claim-status.js"></script>' index.html
+          grep -F '<script src="./src/universal-dashboard-status-view.js"></script>' index.html
+          git diff --check
+      - name: Commit only Dashboard index.html to feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'feat(dashboard): wire canonical Action Center badges (WIP)'
+          git push origin HEAD:feature/universal-claims-v2026-09-17-1430
