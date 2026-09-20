@@ -1,0 +1,34 @@
+name: Unified UVN 20260920 1330
+on:
+  push:
+    paths: ['.github/workflows/uvn-20260920-1330.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set dashboard and every form card display UVN
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          uvn='v2026.09.20:13:30'
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          # Update all rendered legacy card versions, including embedded JS templates.
+          s,n=re.subn(r'(?i)(?:v|STP)?2026[.\-]0?[89][.\-]\d{1,2}[-:][0-2]?\d:[0-5]\d',uvn,s)
+          s=re.sub(r'(<title>)(.*?)(</title>)',lambda m:m.group(1)+'MEG-FORMS Dashboard '+uvn+m.group(3),s,count=1,flags=re.I|re.S)
+          # Cards may reference version values supplied dynamically by database; normalize only visible card labels.
+          s += '\n<script id="meg-uvn-display-20260920-1330">\n(function(){const uvn="v2026.09.20:13:30";function refresh(){document.querySelectorAll(".form-card,.app-card,[class*=form-card],[class*=app-card]").forEach(card=>{card.querySelectorAll("small,.version,[class*=version],[class*=uvn]").forEach(el=>{if(/(?:UVN|version|v20\d{2}[.\-])/i.test(el.textContent||""))el.textContent="UVN · "+uvn;});});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh);else refresh();new MutationObserver(()=>{if(!window.__megUvnPending){window.__megUvnPending=true;requestAnimationFrame(()=>{window.__megUvnPending=false;refresh()})}}).observe(document.documentElement,{childList:true,subtree:true});})();\n</script>\n' if 'meg-uvn-display-20260920-1330' not in s else ''
+          p.write_text(s,encoding='utf-8')
+          Path('version.json').write_text(json.dumps({'version':uvn,'uvn':uvn},indent=2)+'\n',encoding='utf-8')
+          print('Updated',n,'legacy UVN strings in dashboard; cards display override installed')
+          PY
+      - name: Commit and publish
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html version.json
+          if ! git diff --cached --quiet; then git commit -m 'chore: synchronize dashboard and all cards UVN v2026.09.20:13:30' && git push; fi
