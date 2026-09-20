@@ -1,0 +1,20 @@
+name: Stabilize unified UVN card display
+on:
+  push:
+    paths: ['.github/workflows/uvn-display-stability-20260920.yml']
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html');s=p.read_text(encoding='utf-8');s=s.replace('el.textContent="UVN · "+uvn;','if(el.textContent!=="UVN · "+uvn)el.textContent="UVN · "+uvn;');p.write_text(s,encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if ! git diff --cached --quiet; then git commit -m 'fix: avoid repeated UVN DOM mutation on cards' && git push; fi
