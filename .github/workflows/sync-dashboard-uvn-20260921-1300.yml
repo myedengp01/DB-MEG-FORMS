@@ -1,0 +1,50 @@
+name: Synchronize Dashboard UVN v2026.09.21-13:00
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-dashboard-uvn-20260921-1300.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync-dashboard-uvn:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Update all Dashboard visible version stamps and version.json
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          old = 'v2026.09.20:13:30'
+          new = 'v2026.09.21-13:00'
+          page = Path('index.html')
+          content = page.read_text(encoding='utf-8')
+          count = content.count(old)
+          if count < 2:
+              raise SystemExit(f'Expected Dashboard title, cards and footer UVNs; found only {count} occurrences; no files changed')
+          content = content.replace(old, new)
+          if old in content or f'<title>MEG-FORMS Dashboard {new}</title>' not in content:
+              raise SystemExit('Dashboard version synchronization verification failed')
+          page.write_text(content, encoding='utf-8')
+          version_path = Path('version.json')
+          version = json.loads(version_path.read_text(encoding='utf-8'))
+          version['version'] = new
+          version['uvn'] = new
+          version_path.write_text(json.dumps(version, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+          assert old not in page.read_text(encoding='utf-8')
+          assert json.loads(version_path.read_text(encoding='utf-8'))['uvn'] == new
+          print(f'Updated {count} Dashboard UVN occurrences and both version.json fields to {new}')
+          PY
+      - name: Commit actual live app changes to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html version.json
+          git diff --cached --check
+          if git diff --cached --quiet; then echo 'No changes required'; exit 0; fi
+          git commit -m 'fix: synchronize Dashboard title cards footer and version.json UVN v2026.09.21-13:00'
+          git push origin HEAD:main
