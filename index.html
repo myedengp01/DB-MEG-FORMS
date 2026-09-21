@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEG-FORMS Dashboard v2026.09.20:13:30</title>
+<title>MEG-FORMS Dashboard v2026.09.21-13:00</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
@@ -198,7 +198,7 @@ if('serviceWorker' in navigator){
     </div>
 
     <div class="login-foot" id="loginFoot">No account yet? <a onclick="showAuthBox('signup')">Sign up</a></div>
-    <div class="version-stamp">DB-MEG-FORMS v2026.09.20:13:30</div>
+    <div class="version-stamp">DB-MEG-FORMS v2026.09.21-13:00</div>
   </div>
 </div>
 
@@ -225,7 +225,7 @@ if('serviceWorker' in navigator){
   <div id="dashContent">
     <div class="loading-note">Loading your forms...</div>
   </div>
-  <div class="footer-note">Ref: DB-MEG-FORMS v2026.09.20:13:30</div>
+  <div class="footer-note">Ref: DB-MEG-FORMS v2026.09.21-13:00</div>
 </div>
 
 <script>
@@ -233,12 +233,12 @@ const SUPABASE_URL = "https://vzngfswtofegimfcoigx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6bmdmc3d0b2ZlZ2ltZmNvaWd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyODA5MzUsImV4cCI6MjEwMDg1NjkzNX0.47rTrOjzNgxarCBYGapqajLw5v_yATbeKitiyP6a2Sg";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const MEG_APP_UVNS = Object.freeze({
-  scf: 'v2026.09.20:13:30',
-  otcf: 'v2026.09.20:13:30',
-  mtcf: 'v2026.09.20:13:30',
-  tec: 'v2026.09.20:13:30',
-  'tec-v2': 'v2026.09.20:13:30',
-  prfaf: 'v2026.09.20:13:30'
+  scf: 'v2026.09.21-13:00',
+  otcf: 'v2026.09.21-13:00',
+  mtcf: 'v2026.09.21-13:00',
+  tec: 'v2026.09.21-13:00',
+  'tec-v2': 'v2026.09.21-13:00',
+  prfaf: 'v2026.09.21-13:00'
 });
 
 
@@ -428,10 +428,10 @@ window.onload = async function(){
 };
 </script>
 <script id="meg-dashboard-v1145-addon">
-/* DB-MEG-FORMS v2026.09.20:13:30 — Unified Action + Claimant History + P/AC Processing Center */
+/* DB-MEG-FORMS v2026.09.21-13:00 — Unified Action + Claimant History + P/AC Processing Center */
 (function(){
   'use strict';
-  const BUILD_VERSION='DB-MEG-FORMS v2026.09.20:13:30';
+  const BUILD_VERSION='DB-MEG-FORMS v2026.09.21-13:00';
   const POLL_MS=60000;
   const FORMS={
     scf:{name:'Staff Misc Claim',icon:'🧾'}, otcf:{name:'Overtime Claim',icon:'⏱️'},
@@ -988,5 +988,5 @@ window.onload = async function(){
 </html>
 
 <script id="meg-uvn-display-20260920-1330">
-(function(){const uvn="v2026.09.20:13:30";function refresh(){document.querySelectorAll(".form-card,.app-card,[class*=form-card],[class*=app-card]").forEach(card=>{card.querySelectorAll("small,.version,[class*=version],[class*=uvn]").forEach(el=>{if(/(?:UVN|version|v20\d{2}[.\-])/i.test(el.textContent||""))if(el.textContent!=="UVN · "+uvn)el.textContent="UVN · "+uvn;});});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh);else refresh();new MutationObserver(()=>{if(!window.__megUvnPending){window.__megUvnPending=true;requestAnimationFrame(()=>{window.__megUvnPending=false;refresh()})}}).observe(document.documentElement,{childList:true,subtree:true});})();
+(function(){const uvn="v2026.09.21-13:00";function refresh(){document.querySelectorAll(".form-card,.app-card,[class*=form-card],[class*=app-card]").forEach(card=>{card.querySelectorAll("small,.version,[class*=version],[class*=uvn]").forEach(el=>{if(/(?:UVN|version|v20\d{2}[.\-])/i.test(el.textContent||""))if(el.textContent!=="UVN · "+uvn)el.textContent="UVN · "+uvn;});});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",refresh);else refresh();new MutationObserver(()=>{if(!window.__megUvnPending){window.__megUvnPending=true;requestAnimationFrame(()=>{window.__megUvnPending=false;refresh()})}}).observe(document.documentElement,{childList:true,subtree:true});})();
 </script>
