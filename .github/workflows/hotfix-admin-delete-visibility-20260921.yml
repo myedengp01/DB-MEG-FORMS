@@ -1,0 +1,42 @@
+name: Security hotfix admin-only delete
+on:
+  push:
+    paths: ['.github/workflows/hotfix-admin-delete-visibility-20260921.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  hotfix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove Admin Delete from all non-verified sessions immediately
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/universal-dashboard-status-view.js');s=p.read_text(encoding='utf-8')
+          target="if(!state.claimPaid&&!['completed','disbursed','paid','claim paid'].includes(String(state.workflowStatus||'').toLowerCase())&&!pending.has('delete:'+code+':'+id)){"
+          assert s.count(target)==1, 'Expected Delete rendering guard not found; refusing unsafe patch'
+          # Fail closed: only users explicitly confirmed by the server for this form may see Delete.
+          s=s.replace('const pending=new Set();let generation=0;', 'const pending=new Set();let generation=0;const verifiedAdmins=new Map();')
+          s=s.replace('let result;try{result=await adapter.reconcile(rows);}', '''let result;try{result=await adapter.reconcile(rows);}''')
+          anchor='if(token!==generation||root.__MEG_V1145_RENDERED_ROWS__!==rows)return false;'
+          assert s.count(anchor)==1
+          s=s.replace(anchor,'''const formCodes=[...new Set(snapshots.map(x=>x.code))];
+     await Promise.all(formCodes.map(async code=>{
+       // Fail closed for each refresh and form: no client-side role labels, payment permissions or cached authorization.
+       verifiedAdmins.set(code,false);
+       try{const {data,error}=await client.rpc('meg_forms_user_can_admin_delete',{p_form_code:code});if(!error&&data===true)verifiedAdmins.set(code,true);}catch(error){root.console?.warn?.('Admin delete permission unavailable',error);}
+     }));
+     '''+anchor)
+          s=s.replace(target,"if(verifiedAdmins.get(code)===true&&!state.claimPaid&&!['completed','disbursed','paid','claim paid'].includes(String(state.workflowStatus||'').toLowerCase())&&!pending.has('delete:'+code+':'+id)){")
+          s=s.replace("uvn:'v2026.09.20-09:00'","uvn:'v2026.09.21-13:00'")
+          p.write_text(s,encoding='utf-8')
+          print('Server-verified per-form admin visibility guard installed')
+          PY
+      - name: Commit to live branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/universal-dashboard-status-view.js
+          if ! git diff --cached --quiet; then git commit -m 'security: admin-only Action Center Delete UVN v2026.09.21-13:00' && git push; fi
