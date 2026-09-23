@@ -1,4 +1,4 @@
-/* MEG Universal Claim Management — v2026.09.21-13:00.
+/* MEG Universal Claim Management — v2026.09.22-20:00.
  * Action Center: canonical Claim Paid; audited Delete only for server-verified form admins.
  * Rollback: backup/pre-admin-delete-role-fix-20260921-1300.
  */
@@ -93,7 +93,7 @@
    }
    function wrap(name){if(typeof root[name]!=='function')return;const original=root[name];root[name]=function(){const value=original.apply(this,arguments);void refresh();return value;};}
    ['MEG_renderDrawer','MEG_openActionCenter','MEG_setTab','MEG_STEP2_R4_refreshPaymentButtons'].forEach(wrap);
-   const controller=Object.freeze({installed:true,uvn:'v2026.09.21-13:00',refresh});root.MEGDashboardCanonicalView=controller;return controller;
+   const controller=Object.freeze({installed:true,uvn:'v2026.09.22-20:00',refresh});root.MEGDashboardCanonicalView=controller;return controller;
  }
  root.MEGInstallDashboardCanonicalView=install;
  const client=typeof sb!=='undefined'?sb:root.sb;install(client);
