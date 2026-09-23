@@ -1,0 +1,53 @@
+name: Dashboard card UVN sync 20260922-2000
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/sync-dashboard-card-uvn-20260922-2000.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Update dashboard and card UVNs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          old='v2026.09.21-13:00'
+          new='v2026.09.22-20:00'
+
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          assert s.count(old) >= 8, f'expected old UVN in dashboard, found {s.count(old)}'
+          # All dashboard build/fallback/card UVNs move together.
+          s=s.replace(old,new)
+          # Existing form version.json files do not require form_code.
+          strict="if(remoteCode!==code)return fallback;"
+          tolerant="if(remoteCode && remoteCode!==code)return fallback;"
+          assert strict in s or tolerant in s
+          s=s.replace(strict,tolerant)
+          for code in ["scf","otcf","mtcf","tec","tec-v2","prfaf"]:
+              assert f"{code}: '{new}'" in s or f"'{code}': '{new}'" in s
+          assert old not in s
+          p.write_text(s,encoding='utf-8')
+
+          q=Path('src/universal-dashboard-status-view.js')
+          if q.exists():
+              t=q.read_text(encoding='utf-8').replace(old,new)
+              q.write_text(t,encoding='utf-8')
+
+          Path('version.json').write_text(json.dumps({'version':new,'uvn':new},indent=2)+'\n',encoding='utf-8')
+          print('PASS: dashboard shell + six card fallback UVNs synchronized to',new)
+          print('PASS: remote version.json auto-sync accepts files with or without form_code')
+          PY
+          git diff --check
+          git add index.html version.json src/universal-dashboard-status-view.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git diff --cached --quiet || (git commit -m 'fix(dashboard): sync six card UVNs to v2026.09.22-20:00' && git push origin main)
